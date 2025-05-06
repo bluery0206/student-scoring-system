@@ -1,0 +1,34 @@
+{% extends 'app/base/empty.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block body %}
+    <nav class="navbar navbar-expand-lg"
+        style="background-color: var(--bs-content-bg); border-bottom: var(--bs-border-width) solid var(--bs-content-border-color);">
+
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="{% static 'icon/school-solid.svg' %}" alt="SSS Logo" height="20" width="24"
+                    class="object-fit-cover p-0 m-0 d-inline-block align-text-top">
+                Student Scoring System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-collapse-1"
+                aria-controls="navbar-collapse-1" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbar-collapse-1">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Home</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {% block content %}
+    {% endblock %}
+{% endblock %}
