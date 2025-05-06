@@ -127,6 +127,5 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-LOGIN_REDIRECT_URL = 'app-signin'
-LOGIN_URL = 'app-signin' 
+LOGIN_REDIRECT_URL = 'auth:signin'
+LOGIN_URL = 'auth:signin'
