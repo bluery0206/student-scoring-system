@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.validators import RegexValidator, MinLengthValidator, FileExtensionValidator
+from django.core.validators import RegexValidator, MinLengthValidator, MinValueValidator
 
 
 
@@ -106,11 +106,11 @@ class Student(models.Model):
     def full_name(self):
         name = ""
 
-        if self.first_name: name += self.first_name
-        if self.last_name: name += f" {self.last_name}"
+        if self.first_name: name += self.first_name.title()
+        if self.last_name: name += f" {self.last_name.title()}"
         if self.suffix: name += f" {self.suffix}"
 
-        return name.title()
+        return name
 
     def __str__(self):
         return self.full_name
@@ -119,7 +119,9 @@ class Student(models.Model):
 class Test(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=200, blank=True)
-    total_score = models.IntegerField(default=0)
+    total_score = models.IntegerField(
+        validators=[MinValueValidator(1)]
+    )
     course = models.ForeignKey(
         Course, 
         on_delete=models.CASCADE, 
@@ -136,7 +138,7 @@ class Test(models.Model):
         ]]
 
     def __str__(self):
-        return self.name
+        return f"{self.name.title()} ({self.total_score} points)"
 
 
 class Score(models.Model):
