@@ -11,15 +11,17 @@ authpatterns = [
 coursepatterns = [
     path('', views.course, name="index"),
     path('add/', views.course_add, name="add"),
-    path('update/<int:pk>', views.course_update, name="update"),
+    path('edit/<int:pk>', views.course_edit, name="edit"),
     path('delete/<int:pk>', views.course_delete, name="delete"),
+    path('delete/all/', views.course_delete_all, name="delete_all"),
 ]
 
 sectionpatterns = [
     path('', views.section, name="index"),
     path('add/', views.section_add, name="add"),
-    path('update/<int:pk>', views.section_update, name="update"),
+    path('edit/<int:pk>', views.section_edit, name="edit"),
     path('delete/<int:pk>', views.section_delete, name="delete"),
+    path('delete/all/', views.section_delete_all, name="delete_all"),
 ]
 
 urlpatterns = [

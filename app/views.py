@@ -8,10 +8,8 @@ from urllib.parse import unquote # For decoding encoded urls (e.g. https%3A%2F%2
 
 import logging
 
-from .forms import (
-    SignUpForm, 
-    SignInForm, 
-)
+from . import forms
+from . import models
 
 
 
@@ -34,10 +32,10 @@ def index(request):
 def signin(request):
     """ User Login View """
 
-    form = SignInForm()
+    form = forms.SignInForm()
 
     if request.method == "POST":
-        form = SignInForm(request, data=request.POST)
+        form = forms.SignInForm(request, data=request.POST)
         logger.debug("User's credentials accepted. Validating...")
 
         if form.is_valid():
@@ -59,10 +57,10 @@ def signin(request):
 def signup(request):
     """ User Register View """
 
-    form = SignUpForm()
+    form = forms.SignUpForm()
 
     if request.method == "POST":
-        form = SignUpForm(request.POST)
+        form = forms.SignUpForm(request.POST)
 
         if form.is_valid():
             instance = form.save()
@@ -101,16 +99,16 @@ def course(request):
 def course_add(request):
 
     context = {
-        'title': 'Course: Add',
+        'title': 'Course - Add',
     }
 
     return render(request, "app/course/index.html", context)
 
 
-def course_update(request, pk):
+def course_edit(request, pk):
 
     context = {
-        'title': 'Course: Update',
+        'title': 'Course - edit',
     }
 
     return render(request, "app/course/index.html", context)
@@ -118,42 +116,134 @@ def course_update(request, pk):
 def course_delete(request, pk):
 
     context = {
-        'title': 'Course: Delete',
+        'title': 'Course - Delete',
+    }
+
+    return render(request, "app/course/index.html", context)
+
+def course_delete_all(request):
+
+    context = {
+        'title': 'Course - Delete',
     }
 
     return render(request, "app/course/index.html", context)
 
 
 def section(request):
+    sections = models.Section.objects.all()
 
     context = {
         'title': 'Sections',
+        'sections': sections,
     }
 
-    return render(request, "app/course/index.html", context)
+    return render(request, "app/section/index.html", context)
 
 
 def section_add(request):
+    prev = unquote(request.GET.get("prev", ""))
+    next = unquote(request.GET.get("next", ""))
+
+    if request.method == "POST":
+        form = forms.SectionForm(request.POST)
+        logger.debug("Section accepted. Validating...")
+
+        if form.is_valid():
+            form.save()
+            output_msg = f"Section ({form.instance.name}) created."
+            logger.debug(output_msg)
+            messages.success(request, output_msg)
+            return redirect(next if next else 'section:index')
+    else:
+        form = forms.SectionForm()
 
     context = {
-        'title': 'Section: Add',
+        'title': 'Section - Add',
+        'form': form,
+        'is_desctructive': False,
+        'prev': prev,
+        'next': next,
     }
 
-    return render(request, "app/section/index.html", context)
+    return render(request, "app/section/form.html", context)
 
 
-def section_update(request, pk):
+def section_edit(request, pk):
+    prev = unquote(request.GET.get("prev", ""))
+    next = unquote(request.GET.get("next", ""))
+
+    section = get_object_or_404(models.Section, pk=pk)
+
+    if request.method == "POST":
+        form = forms.SectionForm(request.POST, instance=section)
+
+        if form.is_valid():
+            form.save()
+            output_msg = f"Section ({form.instance.name}) edited successfully."
+            logger.debug(output_msg)
+            messages.success(request, output_msg)
+            return redirect(next if next else 'section:index')
+    else:
+        form = forms.SectionForm(instance=section)
 
     context = {
-        'title': 'Section: Update',
+        'title': f'Section - Edit {section.name}',
+        'form': form,
+        'is_desctructive': False,
+        'prev': prev,
+        'next': next,
     }
 
-    return render(request, "app/section/index.html", context)
+    return render(request, "app/section/form.html", context)
 
 def section_delete(request, pk):
+    prev = unquote(request.GET.get("prev", ""))
+    next = unquote(request.GET.get("next", ""))
 
+    section = get_object_or_404(models.Section, pk=pk)
+    name = section.name 
+
+    if request.method == "POST":
+        section.delete()
+        output_msg = f"Section ({name}) deleted successfully."
+        logger.debug(output_msg)
+        messages.success(request, output_msg)
+        return redirect(next if next else 'section:index')
+    
     context = {
-        'title': 'Ssection: Delete',
+        'title': f'Section - Delete {name}',
+        'description': "This operation cannot be undone.",
+        'is_desctructive': True,
+        'prev': prev,
+        'next': next,
     }
 
-    return render(request, "app/section/index.html", context)
+    return render(request, "app/base/form.html", context)
+
+
+def section_delete_all(request):
+    prev = unquote(request.GET.get("prev", ""))
+    next = unquote(request.GET.get("next", ""))
+
+    if request.method == "POST":
+        sections = models.Section.objects.all()
+        logger.debug("Deleting sections")
+
+        for section in sections:
+            section.delete()
+
+        output_msg = f"All sections deleted successfully."
+        logger.debug(output_msg)
+        messages.success(request, output_msg)
+        return redirect(next if next else 'section:index')
+    
+    context = {
+        'title': f'Section - Delete All',
+        'description': "This operation cannot be undone.",
+        'is_desctructive': True,
+        'prev': prev,
+        'next': next,
+    }
+
+    return render(request, "app/base/form.html", context)
