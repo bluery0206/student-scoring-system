@@ -7,8 +7,6 @@ from . import models
 
 
 class SignUpForm(UserCreationForm):
-    """ User Registration Form """
-
     email = forms.EmailField(
         widget = forms.TextInput(attrs={
                 'class' : 'form-control',
@@ -72,8 +70,6 @@ class SignUpForm(UserCreationForm):
     )
 
     class Meta:
-        """ Metadata """
-
         # save it to the model
         # Whenever this forms validates, this is going to create a new User
         model = User
@@ -82,10 +78,7 @@ class SignUpForm(UserCreationForm):
         fields = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2']
 
 
-
 class SignInForm(AuthenticationForm):
-    """ Login Form"""
-
     username = forms.CharField(
         validators = [
             RegexValidator(
@@ -106,216 +99,130 @@ class SignInForm(AuthenticationForm):
     )
 
     class Meta:
-        """ Metadata """
-
         model 	= User
         fields 	= ['username', 'password']
 
 
 class CourseForm(forms.ModelForm):
-    """ Login Form"""
-
-    name = forms.CharField(
-        widget = forms.TextInput(attrs={
-            'class' : 'form-control',
-            'placeholder': "[1-A] Introduction to Programming",
-        })
-    )
-    description = forms.CharField(
-        widget = forms.Textarea(attrs={
-            'class' : 'form-control',
-            'placeholder': "Your password",
-            'rows': 2,
-        }),
-        required=False
-    )
-    instructor = forms.ChoiceField(
-        widget = forms.Select(attrs={
-            'class' : 'form-control',
-        })
-    )
-
     class Meta:
-        """ Metadata """
-
-        model 	= models.Course
-        fields 	= ["name" ,"description" ,"instructor"]
+        model = models.Course
+        fields = ["name" ,"description" , "section"]
+        widgets = {
+            "name" :forms.TextInput(attrs={
+                'class' : 'form-control',
+                'placeholder': "[1-A] Introduction to Programming",
+            }),
+            "description": forms.Textarea(attrs={
+                'class' : 'form-control',
+                'placeholder': "This course is brought to you by...",
+                'rows': 2,
+            }),
+            "section": forms.Select(attrs={
+                'class': 'form-control'
+            })
+        }
 
 
 class SectionForm(forms.ModelForm):
-    """ Login Form"""
-
-    name = forms.CharField(
-        widget = forms.TextInput(attrs={
-            'class' : 'form-control',
-            'placeholder': "1-A",
-        })
-    )
-    description = forms.CharField(
-        widget = forms.Textarea(attrs={
-            'class' : 'form-control',
-            'placeholder': "First Year, Section A",
-            'rows': 2,
-        }),
-        required=False
-    )
-
     class Meta:
-        """ Metadata """
-
         model 	= models.Section
         fields 	= ["name" ,"description"]
+        widgets = {
+            "name": forms.TextInput(attrs={
+                'class' : 'form-control',
+                'placeholder': "1-A",
+            }),
+            "description": forms.Textarea(attrs={
+                'class' : 'form-control',
+                'placeholder': "First Year, Section A",
+                'rows': 2,
+            }),
+        }
 
 
 class StudentForm(forms.ModelForm):
-    """ Login Form"""
-
-    first_name = forms.CharField(
-        validators = [
-            RegexValidator(
-                r'^[a-zA-Z-\s]+$',
-                message = "Letters and dash only."
-            )
-        ],
-        widget = forms.TextInput(attrs={
-            'class' : 'form-control',
-            'placeholder': "Juan",
-        })
-    )
-    last_name = forms.CharField(
-        validators = [
-            RegexValidator(
-                r'^[a-zA-Z-\s]+$',
-                message = "Letters and dash only."
-            )
-        ],
-        widget = forms.TextInput(attrs={
-            'class' : 'form-control',
-            'placeholder': "Dela Cruz",
-        })
-    )
-    suffix = forms.CharField(
-        validators = [
-            RegexValidator(
-                r'^[a-zA-Z-\s]+$',
-                message = "Letters and dash only."
-            )
-        ],
-        widget = forms.TextInput(attrs={
-            'class' : 'form-control',
-            'placeholder': "Jr.",
-        })
-    )
-    sex = forms.ChoiceField(
-        widget = forms.Select(attrs={
-            'class' : 'form-control',
-        })
-    )
-    section = forms.ChoiceField(
-        widget = forms.Select(attrs={
-            'class' : 'form-control',
-        })
-    )
-
     class Meta:
-        """ Metadata """
-
         model 	= models.Student
         fields 	= ["first_name" ,"last_name" ,"suffix", "sex", "section"]
+        widgets = {
+            'first_name': forms.TextInput(attrs={
+                'class' : 'form-control',
+                'placeholder': "Juan",
+            }),
+            'last_name': forms.TextInput(attrs={
+                'class' : 'form-control',
+                'placeholder': "Dela Cruz",
+            }),
+            "suffix": forms.TextInput(attrs={
+                'class' : 'form-control',
+                'placeholder': "Jr.",
+            }),
+            "sex": forms.Select(attrs={
+                'class' : 'form-control',
+            }),
+            "section": forms.Select(attrs={
+                'class' : 'form-control',
+            }),
+        }
 
 
 
 class SectionForm(forms.ModelForm):
-    """ Login Form"""
-
-    name = forms.CharField(
-        validators = [
-            RegexValidator(
-                r'^[0-9a-zA-Z\s-]+$',
-                message = "Letters and dash only."
-            )
-        ],
-        widget = forms.TextInput(attrs={
-            'class' : 'form-control',
-            'placeholder': "1-A",
-        })
-    )
-    description = forms.CharField(
-        widget = forms.Textarea(attrs={
-            'class' : 'form-control',
-            'placeholder': "First Year, Section A",
-            'rows': 2,
-        }),
-        required=False
-    )
-
     class Meta:
-        """ Metadata """
-
         model 	= models.Section
         fields 	= ["name" ,"description"]
+        widgets = {
+            "name": forms.TextInput(attrs={
+                'class' : 'form-control',
+                'placeholder': "1-A",
+            }),
+            "description": forms.Textarea(attrs={
+                'class' : 'form-control',
+                'placeholder': "First Year, Section A",
+                'rows': 2,
+            }),
+        }
 
 
 class TestForm(forms.ModelForm):
-    """ Login Form"""
-
-    name = forms.CharField(
-        widget = forms.TextInput(attrs={
-            'class' : 'form-control',
-            'placeholder': "Final Examination",
-        })
-    )
-    description = forms.CharField(
-        widget = forms.TextInput(attrs={
-            'class' : 'form-control',
-            'placeholder': "Final Examination in This Course.",
-            'rows': 2,
-        }),
-        required=False
-    )
-    total_score = forms.IntegerField(
-        widget = forms.NumberInput(attrs={
-            'class' : 'form-control',
-            'min': 0,
-            'max': 100,
-        })
-    )
-    course = forms.ChoiceField(
-        widget = forms.Select(attrs={
-            'class' : 'form-control',
-        })
-    )
-
     class Meta:
-        """ Metadata """
-
         model 	= models.Test
         fields 	= ["name" ,"description" ,"course"]
+        widgets = {
+            "name": forms.TextInput(attrs={
+                'class' : 'form-control',
+                'placeholder': "Final Examination",
+            }),
+            "description": forms.TextInput(attrs={
+                'class' : 'form-control',
+                'placeholder': "Final Examination in This Course.",
+                'rows': 2,
+            }),
+            "total_score": forms.NumberInput(attrs={
+                'class' : 'form-control',
+                'min': 0,
+                'max': 100,
+            }),
+            "course": forms.Select(attrs={
+                'class' : 'form-control',
+            })
+        }
 
 
 class ScoreForm(forms.ModelForm):
-    """ Login Form"""
-
-    score = forms.IntegerField(
-        widget = forms.NumberInput(attrs={
-            'class' : 'form-control',
-            'min': 0,
-            'max': 100,
-        })
-    )
-    student = forms.ChoiceField(
-        widget = forms.Select(attrs={
-            'class' : 'form-control',
-        })
-    )
-    test = forms.ChoiceField(
-        widget = forms.Select(attrs={
-            'class' : 'form-control',
-        })
-    )
-
     class Meta:
-        """ Metadata """
-
         model 	= models.Score
         fields 	= ["score" ,"student" ,"test"]
+        widgets = {
+            "score": forms.NumberInput(attrs={
+                'class' : 'form-control',
+                'min': 0,
+                'max': 100,
+            }),
+            "student": forms.Select(attrs={
+                'class' : 'form-control',
+            }),
+            "test": forms.Select(attrs={
+                'class' : 'form-control',
+            }),
+        }
