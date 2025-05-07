@@ -5,16 +5,13 @@ from django.contrib.auth.models import User
 
 class Section(models.Model):
     name = models.CharField(max_length=50, unique=True)
-    description = models.CharField(max_length=200)
+    description = models.CharField(max_length=200, blank=True)
     date_add = models.DateTimeField(auto_now_add=True)
     date_update = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        unique_together = [['name', 'description']]
         
 class Course(models.Model):
     name = models.CharField(max_length=50)
-    description = models.CharField(max_length=200)
+    description = models.CharField(max_length=200, blank=True)
     instructor = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -31,7 +28,6 @@ class Course(models.Model):
     class Meta:
         unique_together = [[
             'name', 
-            'description', 
             'instructor',
             'section',
         ]]
@@ -71,7 +67,7 @@ class Student(models.Model):
 
 class Test(models.Model):
     name = models.CharField(max_length=50)
-    description = models.CharField(max_length=200)
+    description = models.CharField(max_length=200, blank=True)
     total_score = models.IntegerField(default=0)
     course = models.ForeignKey(
         Course, 
@@ -84,7 +80,6 @@ class Test(models.Model):
     class Meta:
         unique_together = [[
             'name', 
-            'description', 
             'total_score',
             'course',
         ]]
