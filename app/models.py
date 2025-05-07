@@ -4,12 +4,14 @@ from django.contrib.auth.models import User
 
 
 class Section(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=200)
     date_add = models.DateTimeField(auto_now_add=True)
     date_update = models.DateTimeField(auto_now=True)
 
-
+    class Meta:
+        unique_together = [['name', 'description']]
+        
 class Course(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=200)
@@ -25,6 +27,14 @@ class Course(models.Model):
     )
     date_add = models.DateTimeField(auto_now_add=True)
     date_update = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = [[
+            'name', 
+            'description', 
+            'instructor',
+            'section',
+        ]]
 
 
 class Student(models.Model):
@@ -50,6 +60,14 @@ class Student(models.Model):
     date_add = models.DateTimeField(auto_now_add=True)
     date_update = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        unique_together = [[
+            'first_name', 
+            'last_name', 
+            'suffix',
+            'sex',
+        ]]
+
 
 class Test(models.Model):
     name = models.CharField(max_length=50)
@@ -62,6 +80,14 @@ class Test(models.Model):
     )
     date_add = models.DateTimeField(auto_now_add=True)
     date_update = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = [[
+            'name', 
+            'description', 
+            'total_score',
+            'course',
+        ]]
 
 
 class Score(models.Model):
@@ -78,3 +104,10 @@ class Score(models.Model):
     )
     date_add = models.DateTimeField(auto_now_add=True)
     date_update = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = [[
+            'score', 
+            'student', 
+            'test',
+        ]]
