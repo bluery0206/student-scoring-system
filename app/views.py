@@ -87,3 +87,73 @@ def signout(request):
     logger.debug(output_msg)
     messages.success(request, output_msg)
     return redirect('app-index')
+
+
+def course(request):
+
+    context = {
+        'title': 'Courses',
+    }
+
+    return render(request, "app/course/index.html", context)
+
+
+def course_add(request):
+
+    context = {
+        'title': 'Course: Add',
+    }
+
+    return render(request, "app/course/index.html", context)
+
+
+def course_update(request, pk):
+
+    context = {
+        'title': 'Course: Update',
+    }
+
+    return render(request, "app/course/index.html", context)
+
+def course_delete(request, pk):
+
+    context = {
+        'title': 'Course: Delete',
+    }
+
+    return render(request, "app/course/index.html", context)
+
+
+def section(request):
+
+    context = {
+        'title': 'Sections',
+    }
+
+    return render(request, "app/course/index.html", context)
+
+
+def section_add(request):
+
+    context = {
+        'title': 'Section: Add',
+    }
+
+    return render(request, "app/section/index.html", context)
+
+
+def section_update(request, pk):
+
+    context = {
+        'title': 'Section: Update',
+    }
+
+    return render(request, "app/section/index.html", context)
+
+def section_delete(request, pk):
+
+    context = {
+        'title': 'Ssection: Delete',
+    }
+
+    return render(request, "app/section/index.html", context)
