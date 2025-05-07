@@ -45,6 +45,9 @@ class Course(models.Model):
             'section',
         ]]
 
+    def __str__(self):
+        return self.name
+
 
 class Student(models.Model):
     first_name = models.CharField(
@@ -70,7 +73,7 @@ class Student(models.Model):
         blank=True,
         validators = [
             RegexValidator(
-                r'^[a-zA-Z-\s]+$',
+                r'^[a-zA-Z-\s.]+$',
                 message = "Letters and dash only."
             )
         ],
@@ -99,6 +102,19 @@ class Student(models.Model):
             'sex',
         ]]
 
+    @property
+    def full_name(self):
+        name = ""
+
+        if self.first_name: name += self.first_name
+        if self.last_name: name += f" {self.last_name}"
+        if self.suffix: name += f" {self.suffix}"
+
+        return name.title()
+
+    def __str__(self):
+        return self.full_name
+
 
 class Test(models.Model):
     name = models.CharField(max_length=50)
@@ -118,6 +134,9 @@ class Test(models.Model):
             'total_score',
             'course',
         ]]
+
+    def __str__(self):
+        return self.name
 
 
 class Score(models.Model):
@@ -141,3 +160,6 @@ class Score(models.Model):
             'student', 
             'test',
         ]]
+
+    def __str__(self):
+        return f"{self.student.full_name} score"
