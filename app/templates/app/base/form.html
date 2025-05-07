@@ -1,0 +1,48 @@
+{% extends 'app/base/default.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+    <div class="container p-4">
+        <form method="post" class="border rounded shadow py-2 py-sm-4 px-4" novalidate>
+            {% csrf_token %}
+            <div class="mb-3">
+                <div class="row">
+                    <h4>{{ title }} </h4>
+                </div>
+            </div>
+            {% if description %}
+                <div class="mb-3">
+                    <div>{{ description }} </div>
+                </div>
+            {% endif %}
+            {% if form %}
+                {% if form.non_field_errors %}
+                    <div class="mb-3">
+                        {% for error in form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% block form-field %}
+                {% endblock %}
+            {% endif %}
+            <div class="mb-3">
+                <div class="row {% if is_desctructive %}flex-row-reverse{% endif %}">
+                    <div class="col">
+                        <a href="{% if prev %}{{ prev }}{% else %}{% url 'app-index' %}{% endif %}" class="btn btn-secondary w-100">
+                            Cancel
+                        </a>
+                    </div>
+                    <div class="col">
+                        <button type="submit" class="btn btn-{% if is_desctructive %}danger{% else %}success{% endif %} w-100">
+                            Confirm
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
