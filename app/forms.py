@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.core.validators import RegexValidator, MinLengthValidator, FileExtensionValidator
 
+from . import models
 
 
 class SignUpForm(UserCreationForm):
@@ -110,3 +111,197 @@ class SignInForm(AuthenticationForm):
         model 	= User
         fields 	= ['username', 'password']
 
+
+class CourseForm(forms.ModelForm):
+    """ Login Form"""
+
+    name = forms.CharField(
+        widget = forms.TextInput(attrs={
+            'class' : 'form-control',
+            'placeholder': "[1-A] Introduction to Programming",
+        })
+    )
+    description = forms.CharField(
+        widget = forms.Textarea(attrs={
+            'class' : 'form-control',
+            'placeholder': "Your password",
+        })
+    )
+    instructor = forms.ChoiceField(
+        widget = forms.Select(attrs={
+            'class' : 'form-control',
+        })
+    )
+
+    class Meta:
+        """ Metadata """
+
+        model 	= models.Course
+        fields 	= ["name" ,"description" ,"instructor"]
+
+
+class SectionForm(forms.ModelForm):
+    """ Login Form"""
+
+    name = forms.CharField(
+        widget = forms.TextInput(attrs={
+            'class' : 'form-control',
+            'placeholder': "1-A",
+        })
+    )
+    description = forms.CharField(
+        widget = forms.Textarea(attrs={
+            'class' : 'form-control',
+            'placeholder': "First Year, Section A",
+        })
+    )
+
+    class Meta:
+        """ Metadata """
+
+        model 	= models.Section
+        fields 	= ["name" ,"description"]
+
+
+class StudentForm(forms.ModelForm):
+    """ Login Form"""
+
+    first_name = forms.CharField(
+        validators = [
+            RegexValidator(
+                r'^[a-zA-Z-\s]+$',
+                message = "Letters and dash only."
+            )
+        ],
+        widget = forms.TextInput(attrs={
+            'class' : 'form-control',
+            'placeholder': "Juan",
+        })
+    )
+    last_name = forms.CharField(
+        validators = [
+            RegexValidator(
+                r'^[a-zA-Z-\s]+$',
+                message = "Letters and dash only."
+            )
+        ],
+        widget = forms.TextInput(attrs={
+            'class' : 'form-control',
+            'placeholder': "Dela Cruz",
+        })
+    )
+    suffix = forms.CharField(
+        validators = [
+            RegexValidator(
+                r'^[a-zA-Z-\s]+$',
+                message = "Letters and dash only."
+            )
+        ],
+        widget = forms.TextInput(attrs={
+            'class' : 'form-control',
+            'placeholder': "Jr.",
+        })
+    )
+    sex = forms.ChoiceField(
+        widget = forms.Select(attrs={
+            'class' : 'form-control',
+        })
+    )
+    section = forms.ChoiceField(
+        widget = forms.Select(attrs={
+            'class' : 'form-control',
+        })
+    )
+
+    class Meta:
+        """ Metadata """
+
+        model 	= models.Student
+        fields 	= ["first_name" ,"last_name" ,"suffix", "sex", "section"]
+
+
+
+class SectionForm(forms.ModelForm):
+    """ Login Form"""
+
+    name = forms.CharField(
+        widget = forms.TextInput(attrs={
+            'class' : 'form-control',
+            'placeholder': "1-A",
+        })
+    )
+    description = forms.CharField(
+        widget = forms.Textarea(attrs={
+            'class' : 'form-control',
+            'placeholder': "First Year, Section A",
+        })
+    )
+
+    class Meta:
+        """ Metadata """
+
+        model 	= models.Section
+        fields 	= ["name" ,"description"]
+
+
+class TestForm(forms.ModelForm):
+    """ Login Form"""
+
+    name = forms.CharField(
+        widget = forms.TextInput(attrs={
+            'class' : 'form-control',
+            'placeholder': "Final Examination",
+        })
+    )
+    description = forms.CharField(
+        widget = forms.TextInput(attrs={
+            'class' : 'form-control',
+            'placeholder': "Final Examination in This Course.",
+        })
+    )
+    total_score = forms.IntegerField(
+        widget = forms.NumberInput(attrs={
+            'class' : 'form-control',
+            'min': 0,
+            'max': 100,
+        })
+    )
+    course = forms.ChoiceField(
+        widget = forms.Select(attrs={
+            'class' : 'form-control',
+        })
+    )
+
+    class Meta:
+        """ Metadata """
+
+        model 	= models.Test
+        fields 	= ["name" ,"description" ,"course"]
+
+
+class ScoreForm(forms.ModelForm):
+    """ Login Form"""
+
+    score = forms.IntegerField(
+        widget = forms.NumberInput(attrs={
+            'class' : 'form-control',
+            'min': 0,
+            'max': 100,
+        })
+    )
+    student = forms.ChoiceField(
+        widget = forms.Select(attrs={
+            'class' : 'form-control',
+        })
+    )
+    test = forms.ChoiceField(
+        widget = forms.Select(attrs={
+            'class' : 'form-control',
+        })
+    )
+
+    class Meta:
+        """ Metadata """
+
+        model 	= models.Score
+        fields 	= ["score" ,"student" ,"test"]
