@@ -125,7 +125,9 @@ class CourseForm(forms.ModelForm):
         widget = forms.Textarea(attrs={
             'class' : 'form-control',
             'placeholder': "Your password",
-        })
+            'rows': 2,
+        }),
+        required=False
     )
     instructor = forms.ChoiceField(
         widget = forms.Select(attrs={
@@ -153,7 +155,9 @@ class SectionForm(forms.ModelForm):
         widget = forms.Textarea(attrs={
             'class' : 'form-control',
             'placeholder': "First Year, Section A",
-        })
+            'rows': 2,
+        }),
+        required=False
     )
 
     class Meta:
@@ -225,6 +229,12 @@ class SectionForm(forms.ModelForm):
     """ Login Form"""
 
     name = forms.CharField(
+        validators = [
+            RegexValidator(
+                r'^[0-9a-zA-Z\s-]+$',
+                message = "Letters and dash only."
+            )
+        ],
         widget = forms.TextInput(attrs={
             'class' : 'form-control',
             'placeholder': "1-A",
@@ -234,7 +244,9 @@ class SectionForm(forms.ModelForm):
         widget = forms.Textarea(attrs={
             'class' : 'form-control',
             'placeholder': "First Year, Section A",
-        })
+            'rows': 2,
+        }),
+        required=False
     )
 
     class Meta:
@@ -257,7 +269,9 @@ class TestForm(forms.ModelForm):
         widget = forms.TextInput(attrs={
             'class' : 'form-control',
             'placeholder': "Final Examination in This Course.",
-        })
+            'rows': 2,
+        }),
+        required=False
     )
     total_score = forms.IntegerField(
         widget = forms.NumberInput(attrs={
