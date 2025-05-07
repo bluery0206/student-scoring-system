@@ -1,0 +1,74 @@
+{% extends 'app/base/form.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block form-field %}
+    <!-- Name field -->
+    <div class="mb-3">
+        <label for="{{ form.name.id_for_label}}">
+            {{ form.name.label|title }}
+        </label>
+        {% if form.name.errors %}
+            {{ form.name|add_class:"is-invalid" }}
+            
+            {% for error in form.name.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        {% elif not form.name.errors and request.method == "POST" %}
+            {{ form.name|add_class:"is-valid" }}
+        {% else %}
+            {{ form.name }}
+        {% endif %}
+    </div>
+
+    <!-- Description field -->
+    <div class="mb-3">
+        <label for="{{ form.description.id_for_label}}">
+            {{ form.description.label|title }}
+        </label>
+        {% if form.description.errors %}
+            {{ form.description|add_class:"is-invalid" }}
+            
+            {% for error in form.description.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        {% elif not form.description.errors and request.method == "POST" %}
+            {{ form.description|add_class:"is-valid" }}
+        {% else %}
+            {{ form.description }}
+        {% endif %}
+    </div>
+
+    <!-- Section field -->
+    <div class="mb-3">
+        <label for="{{ form.section.id_for_label}}">
+            {{ form.section.label|title }}
+        </label>
+        {% if form.section.errors %}
+            {{ form.section|add_class:"is-invalid" }}
+            
+            {% for error in form.section.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        {% elif not form.section.errors and request.method == "POST" %}
+            {{ form.section|add_class:"is-valid" }}
+        {% else %}
+            {{ form.section }}
+        {% endif %}
+    </div>
+
+    <!-- Instructor field -->
+    <div class="mb-3">
+        <label class="form-label">
+            Instructor
+        </label>
+
+        <input type="text" class="form-control" value="{% if request.user.get_full_name %}{{ request.user.get_full_name }}{% else %}{{request.user.username}}{% endif %}" disabled>
+    </div>
+{% endblock %}

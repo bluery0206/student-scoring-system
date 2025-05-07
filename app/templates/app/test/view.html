@@ -1,0 +1,102 @@
+{% extends 'app/base/default.html' %}
+
+{% block content %}
+    <div class="container  py-4 px-sm-4">
+        <div class="row justify-content-between">
+            <div class="col-auto">
+                <h2>
+                    <i class="fa-solid fa-user-group"></i>
+                    <span>{{ test }}</span>
+                </h2>
+                <small class="text-body-secondary">
+                    <div>
+                        <span><i class="fa-regular fa-calendar-plus"></i> Date Created: {{ student.date_add }} </span>
+                    </div>
+                    <div>
+                        <span><i class="fa-solid fa-clock"></i> Date Updated: {{ student.date_update }} </span>
+                    </div>
+                </small>
+            </div>
+            <div class="col-auto">
+                <div class="dropdown">
+                    <button type="button" class="btn" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="visually-hidden">Toggle Dropdown</span>
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="{% url 'course:test:edit' course.pk test.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}"
+                                class="dropdown-item" aria-current="true">
+                                Edit
+                            </a>
+                            <a href="{% url 'course:test:delete' course.pk test.pk %}?prev={{ request.build_absolute_uri|urlencode }}"
+                                class="dropdown-item" aria-current="true">
+                                Delete
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div>
+            <div class="row align-items-center justify-content-end py-2">
+                <div class="col-auto">
+                    <a href="{% url 'section:student:add' section.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}"
+                        class="btn btn-sm btn-success">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Add new test</span>
+                    </a>
+                    {% if students %}
+                    <a href="{% url 'section:student:delete_all' section.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}"
+                        class="btn btn-sm btn-danger">
+                        <i class="fa-solid fa-trash"></i>
+                        <span>Delete all students</span>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th scope="col">Student</th>
+                            <th scope="col" class="text-center specific-w-150">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if students %}
+                            {% for student in students %}
+                                <tr>
+                                    <td scope="col">
+                                        <a href="{% url 'section:student:view' section.pk student.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}">
+                                            {{ student.full_name }}
+                                        </a>
+                                    </td>
+                                    <td scope="col">
+                                        <div class="row gx-1 justify-content-center">
+                                            <div class="col-auto">
+                                                <div class="">
+                                                    <a href="{% url 'section:student:edit' section.pk student.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="btn btn-success">
+                                                        Edit
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="">
+                                                    <a href="{% url 'section:student:delete' section.pk student.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="btn btn-danger">
+                                                        Delete
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

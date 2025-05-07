@@ -5,33 +5,33 @@
         <div class="mb-4">
             <div class="row align-items-center justify-content-between">
                 <div class="col-auto">
-                    <h4>Courses</h4>
+                    <h4>Sections</h4>
                 </div>
                 <div class="col-auto">
-                    <a href="{% url 'course:add' %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="btn btn-sm btn-success">
+                    <a href="{% url 'section:add' %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="btn btn-sm btn-success">
                         <i class="fa-solid fa-plus"></i>
                         <span>Add</span>
                     </a>
-                    {% if courses %}
-                        <a href="{% url 'course:delete_all' %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="btn btn-sm btn-danger">
+                    {% if sections %}
+                        <a href="{% url 'section:delete_all' %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="btn btn-sm btn-danger">
                             <i class="fa-solid fa-trash"></i>
                             <span>Delete All</span>
                         </a>
                     {% endif %}
                 </div>
             </div>
-            <div class="row row-cols-1 row-cols-lg-2 row-cols-md-2 g-2">
-                {% for course in courses %}
+            <div class="row row-cols-1 row-cols-lg-3 row-cols-md-2 g-2">
+                {% for section in sections %}
                     <div class="col">
                         <div class="card">
                             <div class="card-body">
                                 <div class="row justify-content-between">
                                     <div class="col-auto">
                                         <h5 class="card-title">
-                                            {{ course.section.name }} - {{ course.name }}
+                                            {{ section.name }}
                                         </h5>
                                         <div class="card-text"> 
-                                            {{ course.description }}
+                                            {{ section.description }}
                                         </div>
                                     </div>
                                     <div class="col-auto">
@@ -42,13 +42,13 @@
                                             </button>
                                             <ul class="dropdown-menu">
                                                 <li>
-                                                    <a href="{% url 'course:view' course.pk %}?prev={{ request.build_absolute_uri|urlencode }}" class="dropdown-item" aria-current="true">
+                                                    <a href="" class="dropdown-item" aria-current="true">
                                                         View
                                                     </a>
-                                                    <a href="{% url 'course:edit' course.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="dropdown-item" aria-current="true">
+                                                    <a href="{% url 'section:edit' section.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="dropdown-item" aria-current="true">
                                                         Edit
                                                     </a>
-                                                    <a href="{% url 'course:delete' course.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="dropdown-item" aria-current="true">
+                                                    <a href="{% url 'section:delete' section.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="dropdown-item" aria-current="true">
                                                         Delete
                                                     </a>
                                                 </li>

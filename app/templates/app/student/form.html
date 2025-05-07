@@ -1,0 +1,94 @@
+{% extends 'app/base/form.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block form-field %}
+    <!-- Name field -->
+    <div class="mb-3">
+        <label for="{{ form.first_name.id_for_label}}">
+            {{ form.first_name.label|title }}
+        </label>
+        {% if form.first_name.errors %}
+            {{ form.first_name|add_class:"is-invalid" }}
+            
+            {% for error in form.first_name.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        {% elif not form.first_name.errors and request.method == "POST" %}
+            {{ form.first_name|add_class:"is-valid" }}
+        {% else %}
+            {{ form.first_name }}
+        {% endif %}
+    </div>
+
+    <!-- Name field -->
+    <div class="mb-3">
+        <label for="{{ form.last_name.id_for_label}}">
+            {{ form.last_name.label|title }}
+        </label>
+        {% if form.last_name.errors %}
+            {{ form.last_name|add_class:"is-invalid" }}
+            
+            {% for error in form.last_name.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        {% elif not form.last_name.errors and request.method == "POST" %}
+            {{ form.last_name|add_class:"is-valid" }}
+        {% else %}
+            {{ form.last_name }}
+        {% endif %}
+    </div>
+
+    <!-- Name field -->
+    <div class="mb-3">
+        <label for="{{ form.suffix.id_for_label}}">
+            {{ form.suffix.label|title }}
+        </label>
+        {% if form.suffix.errors %}
+            {{ form.suffix|add_class:"is-invalid" }}
+            
+            {% for error in form.suffix.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        {% elif not form.suffix.errors and request.method == "POST" %}
+            {{ form.suffix|add_class:"is-valid" }}
+        {% else %}
+            {{ form.suffix }}
+        {% endif %}
+    </div>
+
+    <!-- Name field -->
+    <div class="mb-3">
+        <label for="{{ form.sex.id_for_label}}">
+            {{ form.sex.label|title }}
+        </label>
+        {% if form.sex.errors %}
+            {{ form.sex|add_class:"is-invalid" }}
+            
+            {% for error in form.sex.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        {% elif not form.sex.errors and request.method == "POST" %}
+            {{ form.sex|add_class:"is-valid" }}
+        {% else %}
+            {{ form.sex }}
+        {% endif %}
+    </div>
+
+    <!-- Instructor field -->
+    <div class="mb-3">
+        <label class="form-label">
+            Section
+        </label>
+
+        <input type="text" class="form-control" value="{{ section.name }}" disabled>
+    </div>
+{% endblock %}

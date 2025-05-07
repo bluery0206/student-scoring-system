@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.core.validators import RegexValidator, MinLengthValidator, FileExtensionValidator
+from django.forms import formset_factory # for making n number of forms
 
 from . import models
 
@@ -143,7 +144,7 @@ class SectionForm(forms.ModelForm):
 class StudentForm(forms.ModelForm):
     class Meta:
         model 	= models.Student
-        fields 	= ["first_name" ,"last_name" ,"suffix", "sex", "section"]
+        fields 	= ["first_name" ,"last_name" ,"suffix", "sex"]
         widgets = {
             'first_name': forms.TextInput(attrs={
                 'class' : 'form-control',
@@ -158,9 +159,6 @@ class StudentForm(forms.ModelForm):
                 'placeholder': "Jr.",
             }),
             "sex": forms.Select(attrs={
-                'class' : 'form-control',
-            }),
-            "section": forms.Select(attrs={
                 'class' : 'form-control',
             }),
         }
@@ -187,7 +185,7 @@ class SectionForm(forms.ModelForm):
 class TestForm(forms.ModelForm):
     class Meta:
         model 	= models.Test
-        fields 	= ["name" ,"description" ,"course"]
+        fields 	= ["name" ,"description" ,"total_score"]
         widgets = {
             "name": forms.TextInput(attrs={
                 'class' : 'form-control',
@@ -200,12 +198,10 @@ class TestForm(forms.ModelForm):
             }),
             "total_score": forms.NumberInput(attrs={
                 'class' : 'form-control',
-                'min': 0,
+                'min': 1,
                 'max': 100,
+                'step': 1,
             }),
-            "course": forms.Select(attrs={
-                'class' : 'form-control',
-            })
         }
 
 

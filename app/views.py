@@ -87,47 +87,146 @@ def signout(request):
     return redirect('app-index')
 
 
+
+
 def course(request):
+    courses = models.Course.objects.filter(instructor=request.user)
 
     context = {
         'title': 'Courses',
+        'courses': courses,
     }
 
     return render(request, "app/course/index.html", context)
 
 
 def course_add(request):
+    prev = unquote(request.GET.get("prev", ""))
+    next = unquote(request.GET.get("next", ""))
+
+    if request.method == "POST":
+        form = forms.CourseForm(request.POST)
+        logger.debug("Section accepted. Validating...")
+
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.instructor = request.user
+            instance.save()
+            output_msg = f"Section ({form.instance.name}) created."
+            logger.debug(output_msg)
+            messages.success(request, output_msg)
+            return redirect(next if next else 'course:index')
+    else:
+        form = forms.CourseForm()
 
     context = {
         'title': 'Course - Add',
+        'form': form,
+        'is_desctructive': False,
+        'prev': prev,
+        'next': next,
     }
 
-    return render(request, "app/course/index.html", context)
+    return render(request, "app/course/form.html", context)
 
 
-def course_edit(request, pk):
+def course_edit(request, course_id):
+    prev = unquote(request.GET.get("prev", ""))
+    next = unquote(request.GET.get("next", ""))
+
+    course = get_object_or_404(models.Course, pk=course_id)
+
+    if request.method == "POST":
+        form = forms.CourseForm(request.POST, instance=course)
+
+        if form.is_valid():
+            form.save()
+            output_msg = f"Course ({form.instance.name}) edited successfully."
+            logger.debug(output_msg)
+            messages.success(request, output_msg)
+            return redirect(next if next else 'course:index')
+    else:
+        form = forms.CourseForm(instance=course)
 
     context = {
-        'title': 'Course - edit',
+        'title': f'Course - Edit {course.name}',
+        'form': form,
+        'is_desctructive': False,
+        'prev': prev,
+        'next': next,
     }
 
-    return render(request, "app/course/index.html", context)
+    return render(request, "app/course/form.html", context)
 
-def course_delete(request, pk):
 
+def course_delete(request, course_id):
+    prev = unquote(request.GET.get("prev", ""))
+    next = unquote(request.GET.get("next", ""))
+
+    course = get_object_or_404(models.Course, pk=course_id)
+    name = course.name 
+
+    if request.method == "POST":
+        course.delete()
+        output_msg = f"Course ({name}) deleted successfully."
+        logger.debug(output_msg)
+        messages.success(request, output_msg)
+        return redirect(next if next else 'course:index')
+    
     context = {
-        'title': 'Course - Delete',
+        'title': f'Course - Delete {name}',
+        'description': "This operation cannot be undone.",
+        'is_desctructive': True,
+        'prev': prev,
+        'next': next,
     }
 
-    return render(request, "app/course/index.html", context)
+    return render(request, "app/base/form.html", context)
 
 def course_delete_all(request):
+    prev = unquote(request.GET.get("prev", ""))
+    next = unquote(request.GET.get("next", ""))
 
+    if request.method == "POST":
+        courses = models.Course.objects.all()
+        logger.debug("Deleting courses")
+
+        for course in courses:
+            course.delete()
+
+        output_msg = f"All courses deleted successfully."
+        logger.debug(output_msg)
+        messages.success(request, output_msg)
+        return redirect(next if next else 'course:index')
+    
     context = {
-        'title': 'Course - Delete',
+        'title': f'Course - Delete All',
+        'description': "This operation cannot be undone.",
+        'is_desctructive': True,
+        'prev': prev,
+        'next': next,
     }
 
-    return render(request, "app/course/index.html", context)
+    return render(request, "app/base/form.html", context)
+
+
+def course_view(request, course_id):
+    course = get_object_or_404(models.Course, pk=course_id)
+    section = course.section
+    students = section.students.all()
+    tests = course.tests.all()
+
+    context = {
+        'title': f'Course - {course.name}',
+        'course': course,
+        'section': section,
+        'tests': tests,
+        'students': students,
+    }
+
+    return render(request, "app/course/view.html", context)
+
+
 
 
 def section(request):
@@ -247,3 +346,310 @@ def section_delete_all(request):
     }
 
     return render(request, "app/base/form.html", context)
+
+def section_view(request, pk):
+    prev = unquote(request.GET.get("prev", ""))
+    next = unquote(request.GET.get("next", ""))
+    
+    section = get_object_or_404(models.Section, pk=pk)
+    students = section.students.all()
+
+    context = {
+        'title': f'Section - {section.name}',
+        'section': section,
+        'students': students,
+        'prev': prev,
+        'next': next,
+    }
+
+    return render(request, "app/section/view.html", context)
+
+
+
+
+
+
+
+
+
+def student_add(request, section_id):
+    prev = unquote(request.GET.get("prev", ""))
+    next = unquote(request.GET.get("next", ""))
+
+    section = get_object_or_404(models.Section, pk=section_id)
+
+    if request.method == "POST":
+        form = forms.StudentForm(request.POST)
+        logger.debug("Student accepted. Validating...")
+
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.section = section
+            instance.save()
+            output_msg = f"Student ({form.instance.full_name}) created."
+            logger.debug(output_msg)
+            messages.success(request, output_msg)
+            return redirect(next if next else 'student:index')
+    else:
+        form = forms.StudentForm()
+
+    context = {
+        'title': 'Student - Add',
+        'form': form,
+        'section': section,
+        'is_desctructive': False,
+        'prev': prev,
+        'next': next,
+    }
+
+    return render(request, "app/student/form.html", context)
+
+
+def student_edit(request, section_id, student_id):
+    prev = unquote(request.GET.get("prev", ""))
+    next = unquote(request.GET.get("next", ""))
+
+    section = get_object_or_404(models.Section, pk=section_id)
+    student = get_object_or_404(models.Student, pk=student_id)
+
+    if request.method == "POST":
+        form = forms.StudentForm(request.POST, instance=student)
+
+        if form.is_valid():
+            form.save()
+            output_msg = f"Student ({form.instance.full_name}) edited successfully."
+            logger.debug(output_msg)
+            messages.success(request, output_msg)
+            return redirect(next if next else 'section:index')
+    else:
+        form = forms.StudentForm(instance=student)
+
+    context = {
+        'title': f'Student - Edit {student.full_name}',
+        'form': form,
+        'section': section,
+        'is_desctructive': False,
+        'prev': prev,
+        'next': next,
+    }
+
+    return render(request, "app/student/form.html", context)
+
+def student_delete(request, section_id, student_id):
+    prev = unquote(request.GET.get("prev", ""))
+    next = unquote(request.GET.get("next", ""))
+
+    student = get_object_or_404(models.Student, pk=student_id)
+    name = student.full_name 
+
+    if request.method == "POST":
+        student.delete()
+        output_msg = f"Student ({name}) deleted successfully."
+        logger.debug(output_msg)
+        messages.success(request, output_msg)
+        return redirect(next if next else 'section:index')
+    
+    context = {
+        'title': f'Student - Delete {name}',
+        'description': "This operation cannot be undone.",
+        'is_desctructive': True,
+        'prev': prev,
+        'next': next,
+    }
+
+    return render(request, "app/base/form.html", context)
+
+
+def student_delete_all(request, section_id):
+    prev = unquote(request.GET.get("prev", ""))
+    next = unquote(request.GET.get("next", ""))
+
+    if request.method == "POST":
+        section = get_object_or_404(models.Section, pk=section_id)
+        students = section.students.all()
+        logger.debug("Deleting students")
+
+        for student in students:
+            student.delete()
+
+        output_msg = f"All student deleted successfully."
+        logger.debug(output_msg)
+        messages.success(request, output_msg)
+        return redirect(next if next else 'student:index')
+    
+    context = {
+        'title': f'Student - Delete All',
+        'description': "This operation cannot be undone.",
+        'is_desctructive': True,
+        'prev': prev,
+        'next': next,
+    }
+
+    return render(request, "app/base/form.html", context)
+
+def student_view(request, section_id, student_id):
+    prev = unquote(request.GET.get("prev", ""))
+    next = unquote(request.GET.get("next", ""))
+    
+    student = get_object_or_404(models.Student, pk=student_id)
+    section = get_object_or_404(models.Section, pk=section_id)
+
+    context = {
+        'title': f'Student - {student.full_name}',
+        'student': student,
+        'section': section,
+        'prev': prev,
+        'next': next,
+    }
+
+    return render(request, "app/student/view.html", context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def test_add(request, course_id):
+    prev = unquote(request.GET.get("prev", ""))
+    next = unquote(request.GET.get("next", ""))
+
+    course = get_object_or_404(models.Course, pk=course_id)
+
+    if request.method == "POST":
+        form = forms.TestForm(request.POST)
+        logger.debug("test accepted. Validating...")
+
+        if form.is_valid():
+            print("YEAHH")
+            instance = form.save(commit=False)
+            instance.course = course
+            instance.save()
+            output_msg = f"test ({form.instance.name}) created."
+            logger.debug(output_msg)
+            messages.success(request, output_msg)
+            return redirect(next if next else 'course:index')
+    else:
+        form = forms.TestForm()
+
+    context = {
+        'title': 'Test - Add',
+        'form': form,
+        'course': course,
+        'is_desctructive': False,
+        'prev': prev,
+        'next': next,
+    }
+
+    return render(request, "app/test/form.html", context)
+
+
+def test_edit(request, course_id, test_id):
+    prev = unquote(request.GET.get("prev", ""))
+    next = unquote(request.GET.get("next", ""))
+
+    course = get_object_or_404(models.Course, pk=course_id)
+    test = get_object_or_404(models.Test, pk=test_id)
+
+    if request.method == "POST":
+        form = forms.TestForm(request.POST, instance=test)
+
+        if form.is_valid():
+            form.save()
+            output_msg = f"Test ({form.instance.name}) edited successfully."
+            logger.debug(output_msg)
+            messages.success(request, output_msg)
+            return redirect(next if next else 'course:index')
+    else:
+        form = forms.TestForm(instance=test)
+
+    context = {
+        'title': f'test - Edit {test.name}',
+        'form': form,
+        'course': course,
+        'prev': prev,
+        'next': next,
+    }
+
+    return render(request, "app/test/form.html", context)
+
+def test_delete(request, course_id, test_id):
+    prev = unquote(request.GET.get("prev", ""))
+    next = unquote(request.GET.get("next", ""))
+
+    test = get_object_or_404(models.Test, pk=test_id)
+    name = test.name 
+
+    if request.method == "POST":
+        test.delete()
+        output_msg = f"Test ({name}) deleted successfully."
+        logger.debug(output_msg)
+        messages.success(request, output_msg)
+        return redirect(next if next else 'course:index')
+    
+    context = {
+        'title': f'Test - Delete {name}',
+        'description': "This operation cannot be undone.",
+        'is_desctructive': True,
+        'prev': prev,
+        'next': next,
+    }
+
+    return render(request, "app/base/form.html", context)
+
+
+def test_delete_all(request, course_id):
+    prev = unquote(request.GET.get("prev", ""))
+    next = unquote(request.GET.get("next", ""))
+
+    if request.method == "POST":
+        course = get_object_or_404(models.Course, pk=course_id)
+        tests = course.tests.all()
+        logger.debug("Deleting tests")
+
+        for test in tests:
+            test.delete()
+
+        output_msg = f"All tests deleted successfully."
+        logger.debug(output_msg)
+        messages.success(request, output_msg)
+        return redirect(next if next else 'course:index')
+    
+    context = {
+        'title': f'Test - Delete All',
+        'description': "This operation cannot be undone.",
+        'is_desctructive': True,
+        'prev': prev,
+        'next': next,
+    }
+
+    return render(request, "app/base/form.html", context)
+
+def test_view(request, course_id, test_id):
+    prev = unquote(request.GET.get("prev", ""))
+    next = unquote(request.GET.get("next", ""))
+    
+    test = get_object_or_404(models.Test, pk=test_id)
+    course = get_object_or_404(models.Course, pk=course_id)
+    section = course.section
+    students = section.students.all()
+
+
+    context = {
+        'title': f'test - {test.name}',
+        'test': test,
+        'course': course,
+        'section': section,
+        'students': students,
+        'prev': prev,
+        'next': next,
+    }
+
+    return render(request, "app/test/view.html", context)

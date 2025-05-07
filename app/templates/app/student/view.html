@@ -1,0 +1,42 @@
+{% extends 'app/base/default.html' %}
+
+{% block content %}
+    <div class="container  py-4 px-sm-4">
+        <div class="row justify-content-between">
+            <div class="col-auto">
+                <h2>
+                    <i class="fa-solid fa-user-group"></i>
+                    <span>{{ student.full_name }}</span>
+                </h2>
+                <small class="text-body-secondary">
+                    <div>
+                        <span><i class="fa-regular fa-calendar-plus"></i> Date Created: {{ student.date_add }} </span>
+                    </div>
+                    <div>
+                        <span><i class="fa-solid fa-clock"></i> Date Updated: {{ student.date_update }} </span>
+                    </div>
+                </small>
+            </div>
+            <div class="col-auto">
+                <div class="dropdown">
+                    <button type="button" class="btn" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="visually-hidden">Toggle Dropdown</span>
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="{% url 'section:student:edit' section.pk student.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}"
+                                class="dropdown-item" aria-current="true">
+                                Edit
+                            </a>
+                            <a href="{% url 'section:student:delete' section.pk student.pk %}?prev={{ request.build_absolute_uri|urlencode }}"
+                                class="dropdown-item" aria-current="true">
+                                Delete
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

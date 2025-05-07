@@ -1,0 +1,74 @@
+{% extends 'app/base/form.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block form-field %}
+    <!-- Name field -->
+    <div class="mb-3">
+        <label for="{{ form.name.id_for_label}}">
+            {{ form.name.label|title }}
+        </label>
+        {% if form.name.errors %}
+            {{ form.name|add_class:"is-invalid" }}
+            
+            {% for error in form.name.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        {% elif not form.name.errors and request.method == "POST" %}
+            {{ form.name|add_class:"is-valid" }}
+        {% else %}
+            {{ form.name }}
+        {% endif %}
+    </div>
+
+    <!-- Name field -->
+    <div class="mb-3">
+        <label for="{{ form.description.id_for_label}}">
+            {{ form.description.label|title }}
+        </label>
+        {% if form.description.errors %}
+            {{ form.description|add_class:"is-invalid" }}
+            
+            {% for error in form.description.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        {% elif not form.description.errors and request.method == "POST" %}
+            {{ form.description|add_class:"is-valid" }}
+        {% else %}
+            {{ form.description }}
+        {% endif %}
+    </div>
+
+    <!-- Name field -->
+    <div class="mb-3">
+        <label for="{{ form.total_score.id_for_label}}">
+            {{ form.total_score.label|title }}
+        </label>
+        {% if form.total_score.errors %}
+            {{ form.total_score|add_class:"is-invalid" }}
+            
+            {% for error in form.total_score.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        {% elif not form.total_score.errors and request.method == "POST" %}
+            {{ form.total_score|add_class:"is-valid" }}
+        {% else %}
+            {{ form.total_score }}
+        {% endif %}
+    </div>
+
+    <!-- Instructor field -->
+    <div class="mb-3">
+        <label class="form-label">
+            Course
+        </label>
+
+        <input type="text" class="form-control" value="{{ course.name }}" disabled>
+    </div>
+{% endblock %}
