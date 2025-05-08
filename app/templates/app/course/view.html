@@ -4,18 +4,36 @@
     <div class="container  py-4 px-sm-4">
         <div class="row justify-content-between">
             <div class="col-auto">
-                <h2>
-                    <i class="fa-solid fa-user-group"></i>
-                    <span>{{ section.name }} {{ course.name }} ({{ section.students.count }})</span>
-                </h2>
-                <small class="text-body-secondary">
-                    <div>
-                        <span><i class="fa-regular fa-calendar-plus"></i> Date Created: {{ course.date_add }} </span>
+                <h2>{{ course.name }}
+                <h4>
+                    <span>{{ section.name }}</span>
+                    {% if section.description %}
+                        <small class="text-body-secondary">
+                            {{ section.description }}
+                        </small>
+                    {% endif %}
+                </h4>
+                <p>
+                    {% if course.description %}
+                        <small class="fst-italic text-body-secondary">
+                            <span class="fw-bold">Description: </span>{{ course.description }}
+                        </small>
+                    {% endif %}
+                </p>
+                <div class="row">
+                    <div class="col-auto">
+                        <div class="text-nowrap text-body-secondary">
+                            <i class="fa-regular fa-calendar-plus"></i> 
+                            <small>Created: {{ course.date_add }} </small>
+                        </div>
                     </div>
-                    <div>
-                        <span><i class="fa-solid fa-clock"></i> Date Updated: {{ course.date_update }} </span>
+                    <div class="col-auto">
+                        <div class="text-nowrap text-body-secondary">
+                            <i class="fa-solid fa-clock"></i>
+                            <small>Updated: {{ course.date_update }}</small>
+                        </div>
                     </div>
-                </small>
+                </div>
             </div>
             <div class="col-auto">
                 <div class="dropdown">
@@ -25,11 +43,11 @@
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="{% url 'course:edit' course.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}"
+                            <a href="{% url 'course:edit' course.pk %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}"
                                 class="dropdown-item" aria-current="true">
                                 Edit
                             </a>
-                            <a href="{% url 'course:delete' course.pk %}?prev={{ request.build_absolute_uri|urlencode }}"
+                            <a href="{% url 'course:delete' course.pk %}?prev={{ current_url|urlencode }}"
                                 class="dropdown-item" aria-current="true">
                                 Delete
                             </a>
@@ -41,87 +59,27 @@
         <hr>
         <ul class="nav nav-tabs" id="js-tabs-1" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="students-tab" data-bs-toggle="tab" data-bs-target="#students-tab-pane" type="button" role="tab" aria-controls="students-tab-pane" aria-selected="true">
-                    Students
+                <button class="nav-link active" id="tests-tab" data-bs-toggle="tab" data-bs-target="#tests-tab-pane" type="button" role="tab" aria-controls="tests-tab-pane" aria-selected="false">
+                    Tests
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tests-tab" data-bs-toggle="tab" data-bs-target="#tests-tab-pane" type="button" role="tab" aria-controls="tests-tab-pane" aria-selected="false">
-                    Tests
+                <button class="nav-link" id="students-tab" data-bs-toggle="tab" data-bs-target="#students-tab-pane" type="button" role="tab" aria-controls="students-tab-pane" aria-selected="true">
+                    Students
                 </button>
             </li>
         </ul>
         <div class="tab-content" id="js-tabs-content-1">
-            <div class="tab-pane fade show active" id="students-tab-pane" role="tabpanel" aria-labelledby="students-tab" tabindex="0">
+            <div class="tab-pane fade show active" id="tests-tab-pane" role="tabpanel" aria-labelledby="tests-tab" tabindex="0">
                 <div class="row align-items-center justify-content-end py-2">
                     <div class="col-auto">
-                        <a href="{% url 'section:student:add' section.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}"
-                            class="btn btn-sm btn-success">
-                            <i class="fa-solid fa-plus"></i>
-                            <span>Add new student</span>
-                        </a>
-                        {% if students %}
-                        <a href="{% url 'section:student:delete_all' section.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}"
-                            class="btn btn-sm btn-danger">
-                            <i class="fa-solid fa-trash"></i>
-                            <span>Delete all students</span>
-                        </a>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead class="table-secondary">
-                            <tr>
-                                <th scope="col">Student</th>
-                                <th scope="col" class="text-center specific-w-150">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% if students %}
-                                {% for student in students %}
-                                    <tr>
-                                        <td scope="col">
-                                            <a href="{% url 'section:student:view' section.pk student.pk %}">
-                                                {{ student.full_name }}
-                                            </a>
-                                        </td>
-                                        <td scope="col">
-                                            <div class="row gx-1 justify-content-center">
-                                                <div class="col-auto">
-                                                    <div class="">
-                                                        <a href="{% url 'section:student:edit' section.pk student.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="btn btn-success">
-                                                            Edit
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div class="">
-                                                        <a href="{% url 'section:student:delete' section.pk student.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="btn btn-danger">
-                                                            Delete
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            {% endif %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="tests-tab-pane" role="tabpanel" aria-labelledby="tests-tab" tabindex="0">
-
-                <div class="row align-items-center justify-content-end py-2">
-                    <div class="col-auto">
-                        <a href="{% url 'course:test:add' course.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}"
+                        <a href="{% url 'course:test:add' course.pk %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}"
                             class="btn btn-sm btn-success">
                             <i class="fa-solid fa-plus"></i>
                             <span>Add new test</span>
                         </a>
                         {% if students %}
-                        <a href="{% url 'course:test:delete_all' course.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}"
+                        <a href="{% url 'course:test:delete_all' course.pk %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}"
                             class="btn btn-sm btn-danger">
                             <i class="fa-solid fa-trash"></i>
                             <span>Delete all tests</span>
@@ -135,7 +93,7 @@
                             <tr>
                                 <th scope="col">Test</th>
                                 <th scope="col">Total Points</th>
-                                <th scope="col" class="text-center specific-w-150">Actions</th>
+                                <th scope="col" class="text-center specific-w-200">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -154,15 +112,75 @@
                                             <div class="row gx-1 justify-content-center">
                                                 <div class="col-auto">
                                                     <div class="">
-                                                        <a href="{% url 'course:test:edit' course.pk test.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="btn btn-success">
-                                                            Edit
+                                                        <a href="{% url 'course:test:edit' course.pk test.pk %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}" class="btn btn-success">
+                                                            Edit test
                                                         </a>
                                                     </div>
                                                 </div>
                                                 <div class="col-auto">
                                                     <div class="">
-                                                        <a href="{% url 'course:test:delete' course.pk test.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="btn btn-danger">
-                                                            Delete
+                                                        <a href="{% url 'course:test:delete' course.pk test.pk %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}" class="btn btn-danger">
+                                                            Delete test
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="students-tab-pane" role="tabpanel" aria-labelledby="students-tab" tabindex="0">
+                <div class="row align-items-center justify-content-end py-2">
+                    <div class="col-auto">
+                        <a href="{% url 'section:student:add' section.pk %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}"
+                            class="btn btn-sm btn-success">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Add new student</span>
+                        </a>
+                        {% if students %}
+                        <a href="{% url 'section:student:delete_all' section.pk %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}"
+                            class="btn btn-sm btn-danger">
+                            <i class="fa-solid fa-trash"></i>
+                            <span>Delete all students</span>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th scope="col">Student</th>
+                                <th scope="col" class="text-center specific-w-250">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if students %}
+                                {% for student in students %}
+                                    <tr>
+                                        <td scope="col">
+                                            <a href="{% url 'section:student:view' section.pk student.pk %}">
+                                                {{ student.full_name }}
+                                            </a>
+                                        </td>
+                                        <td scope="col">
+                                            <div class="row gx-1 justify-content-center">
+                                                <div class="col-auto">
+                                                    <div class="">
+                                                        <a href="{% url 'section:student:edit' section.pk student.pk %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}" class="btn btn-success">
+                                                            Edit student
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div class="">
+                                                        <a href="{% url 'section:student:delete' section.pk student.pk %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}" class="btn btn-danger">
+                                                            Delete student
                                                         </a>
                                                     </div>
                                                 </div>

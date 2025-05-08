@@ -3,19 +3,19 @@
 {% block content %}
     <div class="container py-4 px-sm-4">
         <div class="mb-4">
-            <div class="row align-items-center justify-content-between">
+            <div class="row py-2 mb-2 align-items-center justify-content-between">
                 <div class="col-auto">
-                    <h4>Courses</h4>
+                    <h4 class="p-0 m-0">Courses</h4>
                 </div>
                 <div class="col-auto">
-                    <a href="{% url 'course:add' %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="btn btn-sm btn-success">
+                    <a href="{% url 'course:add' %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}" class="btn btn-sm btn-success">
                         <i class="fa-solid fa-plus"></i>
-                        <span>Add</span>
+                        <span>Add new course</span>
                     </a>
                     {% if courses %}
-                        <a href="{% url 'course:delete_all' %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="btn btn-sm btn-danger">
+                        <a href="{% url 'course:delete_all' %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}" class="btn btn-sm btn-danger">
                             <i class="fa-solid fa-trash"></i>
-                            <span>Delete All</span>
+                            <span>Delete all courses</span>
                         </a>
                     {% endif %}
                 </div>
@@ -28,10 +28,49 @@
                                 <div class="row justify-content-between">
                                     <div class="col-auto">
                                         <h5 class="card-title">
-                                            {{ course.section.name }} - {{ course.name }}
+                                            [{{ course.section.name }}] {{ course.name }}
                                         </h5>
-                                        <div class="card-text"> 
-                                            {{ course.description }}
+                                        {% if course.description %}
+                                            <div class="card-text"> 
+                                                <div class="row text-body-secondary">
+                                                    <div class="col-1">
+                                                        <i class="fa-solid fa-note-sticky"></i>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <span class="fw-bold">{{ course.description }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        <div class="card-text">
+                                            <div class="row text-body-secondary">
+                                                <div class="col-1">
+                                                    <i class="fa-solid fa-users-between-lines"></i>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <small>Section: {{ course.section.name }} ({{ course.section.students.all.count }} student(s))</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-text">
+                                            <div class="row text-body-secondary">
+                                                <div class="col-1">
+                                                    <i class="fa-regular fa-calendar-plus"></i> 
+                                                </div>
+                                                <div class="col-auto">
+                                                    <small>Created: {{ course.date_add }} </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-text">
+                                            <div class="row text-body-secondary">
+                                                <div class="col-1">
+                                                    <i class="fa-solid fa-clock"></i>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <small>Updated: {{ course.date_update }}</small>
+                                                </div>
+                                            </div>     
                                         </div>
                                     </div>
                                     <div class="col-auto">
@@ -45,10 +84,10 @@
                                                     <a href="{% url 'course:view' course.pk %}" class="dropdown-item" aria-current="true">
                                                         View
                                                     </a>
-                                                    <a href="{% url 'course:edit' course.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="dropdown-item" aria-current="true">
+                                                    <a href="{% url 'course:edit' course.pk %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}" class="dropdown-item" aria-current="true">
                                                         Edit
                                                     </a>
-                                                    <a href="{% url 'course:delete' course.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="dropdown-item" aria-current="true">
+                                                    <a href="{% url 'course:delete' course.pk %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}" class="dropdown-item" aria-current="true">
                                                         Delete
                                                     </a>
                                                 </li>

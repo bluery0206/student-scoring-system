@@ -96,6 +96,7 @@ def course(request):
     context = {
         'title': 'Courses',
         'courses': courses,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/course/index.html", context)
@@ -124,9 +125,8 @@ def course_add(request):
     context = {
         'title': 'Course - Add',
         'form': form,
-        'is_desctructive': False,
         'prev': prev,
-        'next': next,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/course/form.html", context)
@@ -154,9 +154,8 @@ def course_edit(request, course_id):
     context = {
         'title': f'Course - Edit {course.name}',
         'form': form,
-        'is_desctructive': False,
         'prev': prev,
-        'next': next,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/course/form.html", context)
@@ -182,7 +181,7 @@ def course_delete(request, course_id):
         'description': "This operation cannot be undone.",
         'is_desctructive': True,
         'prev': prev,
-        'next': next,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/base/form.html", context)
@@ -210,7 +209,7 @@ def course_delete_all(request):
         'description': "This operation cannot be undone.",
         'is_desctructive': True,
         'prev': prev,
-        'next': next,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/base/form.html", context)
@@ -229,6 +228,7 @@ def course_view(request, course_id):
         'section': section,
         'tests': tests,
         'students': students,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/course/view.html", context)

@@ -6,20 +6,22 @@
             <div class="col-auto">
                 <h2>
                     <span>{{ section.name }}</span>
+                </h2>
+                <p>
                     {% if section.description %}
-                        <small class="text-body-secondary">
+                        <small class="text-body-secondary fst-italic">
                             {{ section.description }}
                         </small>
                     {% endif %}
-                </h2>
+                </p>
                 <div class="row">
-                    <div class="col">
+                    <div class="col-auto">
                         <div class="text-nowrap text-body-secondary">
                             <i class="fa-regular fa-calendar-plus"></i> 
                             <small>Created: {{ section.date_add }} </small>
                         </div>
                     </div>
-                    <div class="col">
+                    <div class="col-auto">
                         <div class="text-nowrap text-body-secondary">
                             <i class="fa-solid fa-clock"></i>
                             <small>Updated: {{ section.date_update }}</small>
