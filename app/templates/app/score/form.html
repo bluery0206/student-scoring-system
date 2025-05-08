@@ -1,0 +1,45 @@
+{% extends 'app/base/form.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block form-field %}
+
+    <!-- Name field -->
+    <div class="mb-3">
+        <label for="{{ form.score.id_for_label}}">
+            {{ form.score.label|title }}
+        </label>
+        {% if form.score.errors %}
+            {{ form.score|add_class:"is-invalid" }}
+            
+            {% for error in form.score.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        {% elif not form.score.errors and request.method == "POST" %}
+            {{ form.score|add_class:"is-valid" }}
+        {% else %}
+            {{ form.score }}
+        {% endif %}
+    </div>
+    
+    
+    <!-- Instructor field -->
+    <div class="mb-3">
+        <label class="form-label">
+            Test
+        </label>
+
+        <input type="text" class="form-control" value="{{ test }}" disabled>
+    </div>
+
+    <!-- Instructor field -->
+    <div class="mb-3">
+        <label class="form-label">
+            Course
+        </label>
+
+        <input type="text" class="form-control" value="{{ course.name }}" disabled>
+    </div>
+{% endblock %}

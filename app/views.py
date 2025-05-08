@@ -636,20 +636,121 @@ def test_view(request, course_id, test_id):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
     
-    test = get_object_or_404(models.Test, pk=test_id)
+    test:models.Test = get_object_or_404(models.Test, pk=test_id)
     course = get_object_or_404(models.Course, pk=course_id)
     section = course.section
-    students = section.students.all()
+    students:list[models.Student] = section.students.all()
+    scores = [student.scores.filter(test=test).first() for student in students]
 
+    print(scores)
 
     context = {
         'title': f'test - {test.name}',
         'test': test,
         'course': course,
         'section': section,
-        'students': students,
+        'students': zip(students, scores),
         'prev': prev,
         'next': next,
     }
 
     return render(request, "app/test/view.html", context)
+
+
+
+def score_add(request, course_id, test_id, student_id):
+    prev = unquote(request.GET.get("prev", ""))
+    next = unquote(request.GET.get("next", ""))
+
+    course = get_object_or_404(models.Course, pk=course_id)
+    test = course.tests.get(id=test_id)
+    student = get_object_or_404(models.Student, pk=student_id)
+
+    if request.method == 'POST':
+        form = forms.ScoreForm(request.POST)
+
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.test = test
+            instance.student = student
+            instance.save()
+            output_msg = f"test ({form.instance}) created."
+            logger.debug(output_msg)
+            messages.success(request, output_msg)
+            return redirect(next if next else 'course:index')
+    else:
+        form = forms.ScoreForm()
+
+    context = {
+        'title': 'Score - Add',
+        'form': form,
+        'course': course,
+        'student': student,
+        'test': test,
+        'is_desctructive': False,
+        'prev': prev,
+        'next': next,
+    }
+
+    return render(request, "app/score/form.html", context)
+
+
+def score_edit(request, course_id, test_id, student_id, score_id):
+    prev = unquote(request.GET.get("prev", ""))
+    next = unquote(request.GET.get("next", ""))
+
+    course = get_object_or_404(models.Course, pk=course_id)
+    test = course.tests.get(id=test_id)
+    student = get_object_or_404(models.Student, pk=student_id)
+    score = get_object_or_404(models.Score, pk=score_id)
+
+    if request.method == 'POST':
+        form = forms.ScoreForm(request.POST, instance=score)
+
+        if form.is_valid():
+            form.save()
+            output_msg = f"test ({form.instance}) created."
+            logger.debug(output_msg)
+            messages.success(request, output_msg)
+            return redirect(next if next else 'course:index')
+    else:
+        form = forms.ScoreForm(instance=score)
+
+    context = {
+        'title': 'Score - Edit',
+        'form': form,
+        'course': course,
+        'student': student,
+        'test': test,
+        'is_desctructive': False,
+        'prev': prev,
+        'next': next,
+    }
+
+    return render(request, "app/score/form.html", context)
+
+
+
+def score_delete(request, course_id, test_id, student_id, score_id):
+    prev = unquote(request.GET.get("prev", ""))
+    next = unquote(request.GET.get("next", ""))
+
+    score = get_object_or_404(models.Score, pk=score_id)
+
+    if request.method == 'POST':
+        output_msg = f"test ({score}) deleted."
+        score.delete()
+        logger.debug(output_msg)
+        messages.success(request, output_msg)
+        return redirect(next if next else 'course:index')
+
+    context = {
+        'title': 'Score - Delete',
+        'course': course,
+        'description': 'This operation cannot be undone',
+        'is_desctructive': True,
+        'prev': prev,
+        'next': next,
+    }
+
+    return render(request, "app/score/form.html", context)
