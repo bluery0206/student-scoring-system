@@ -378,12 +378,6 @@ def section_view(request, pk):
 
 
 
-
-
-
-
-
-
 def student_add(request, section_id):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
@@ -392,13 +386,12 @@ def student_add(request, section_id):
 
     if request.method == "POST":
         form = forms.StudentForm(request.POST)
-        logger.debug("Student accepted. Validating...")
 
         if form.is_valid():
             instance = form.save(commit=False)
             instance.section = section
             instance.save()
-            output_msg = f"Student ({form.instance.full_name}) created."
+            output_msg = f"Student ({form.instance.full_name}) succesfully created."
             logger.debug(output_msg)
             messages.success(request, output_msg)
             return redirect(next if next else 'student:index')
@@ -409,12 +402,12 @@ def student_add(request, section_id):
         'title': 'Student - Add',
         'form': form,
         'section': section,
-        'is_desctructive': False,
         'prev': prev,
-        'next': next,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/student/form.html", context)
+
 
 
 def student_edit(request, section_id, student_id):
@@ -440,12 +433,13 @@ def student_edit(request, section_id, student_id):
         'title': f'Student - Edit {student.full_name}',
         'form': form,
         'section': section,
-        'is_desctructive': False,
         'prev': prev,
-        'next': next,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/student/form.html", context)
+
+
 
 def student_delete(request, section_id, student_id):
     prev = unquote(request.GET.get("prev", ""))
@@ -463,13 +457,14 @@ def student_delete(request, section_id, student_id):
     
     context = {
         'title': f'Student - Delete {name}',
-        'description': "This operation cannot be undone.",
+        'description': "This operation cannot be undone. The tests related to this student will also be deleted.",
         'is_desctructive': True,
         'prev': prev,
-        'next': next,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/base/form.html", context)
+
 
 
 def student_delete_all(request, section_id):
@@ -484,34 +479,37 @@ def student_delete_all(request, section_id):
         for student in students:
             student.delete()
 
-        output_msg = f"All student deleted successfully."
+        output_msg = f"All students deleted successfully."
         logger.debug(output_msg)
         messages.success(request, output_msg)
         return redirect(next if next else 'student:index')
     
     context = {
         'title': f'Student - Delete All',
-        'description': "This operation cannot be undone.",
+        'description': "This operation cannot be undone. The all tests related to the students will also be deleted.",
         'is_desctructive': True,
         'prev': prev,
-        'next': next,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/base/form.html", context)
 
+
+
 def student_view(request, section_id, student_id):
     prev = unquote(request.GET.get("prev", ""))
-    next = unquote(request.GET.get("next", ""))
     
     student = get_object_or_404(models.Student, pk=student_id)
-    section = get_object_or_404(models.Section, pk=section_id)
+    section = student.section
+    scores = student.scores.all()
 
     context = {
         'title': f'Student - {student.full_name}',
         'student': student,
         'section': section,
+        'scores': scores,
         'prev': prev,
-        'next': next,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/student/view.html", context)

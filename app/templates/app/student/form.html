@@ -1,9 +1,8 @@
 {% extends 'app/base/form.html' %}
-{% load static %}
 {% load widget_tweaks %}
 
 {% block form-field %}
-    <!-- Name field -->
+    <!-- First Name field -->
     <div class="mb-3">
         <label for="{{ form.first_name.id_for_label}}">
             {{ form.first_name.label|title }}
@@ -23,7 +22,7 @@
         {% endif %}
     </div>
 
-    <!-- Name field -->
+    <!-- Last Name field -->
     <div class="mb-3">
         <label for="{{ form.last_name.id_for_label}}">
             {{ form.last_name.label|title }}
@@ -43,7 +42,7 @@
         {% endif %}
     </div>
 
-    <!-- Name field -->
+    <!-- Suffix field -->
     <div class="mb-3">
         <label for="{{ form.suffix.id_for_label}}">
             {{ form.suffix.label|title }}
@@ -63,7 +62,7 @@
         {% endif %}
     </div>
 
-    <!-- Name field -->
+    <!-- Sex field -->
     <div class="mb-3">
         <label for="{{ form.sex.id_for_label}}">
             {{ form.sex.label|title }}
@@ -83,7 +82,7 @@
         {% endif %}
     </div>
 
-    <!-- Instructor field -->
+    <!-- Section field -->
     <div class="mb-3">
         <label class="form-label">
             Section
