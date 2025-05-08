@@ -160,6 +160,10 @@ class Score(models.Model):
     date_add = models.DateTimeField(auto_now_add=True)
     date_update = models.DateTimeField(auto_now=True)
 
+    @property
+    def did_pass(self):
+        return "Pass" if self.score > (self.test.passing_score) else "Fail"
+
     class Meta:
         unique_together = [[
             'student', 
