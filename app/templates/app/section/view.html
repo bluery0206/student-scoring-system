@@ -5,17 +5,27 @@
         <div class="row justify-content-between">
             <div class="col-auto">
                 <h2>
-                    <i class="fa-solid fa-user-group"></i>
-                    <span>{{ section.name }} ({{ students.count }})</span>
+                    <span>{{ section.name }}</span>
+                    {% if section.description %}
+                        <small class="text-body-secondary">
+                            {{ section.description }}
+                        </small>
+                    {% endif %}
                 </h2>
-                <small class="text-body-secondary">
-                    <div>
-                        <span><i class="fa-regular fa-calendar-plus"></i> Date Created: {{ section.date_add }} </span>
+                <div class="row">
+                    <div class="col">
+                        <div class="text-nowrap text-body-secondary">
+                            <i class="fa-regular fa-calendar-plus"></i> 
+                            <small>Created: {{ section.date_add }} </small>
+                        </div>
                     </div>
-                    <div>
-                        <span><i class="fa-solid fa-clock"></i> Date Updated: {{ section.date_update }} </span>
+                    <div class="col">
+                        <div class="text-nowrap text-body-secondary">
+                            <i class="fa-solid fa-clock"></i>
+                            <small>Updated: {{ section.date_update }}</small>
+                        </div>
                     </div>
-                </small>
+                </div>
             </div>
             <div class="col-auto">
                 <div class="dropdown">
@@ -25,11 +35,11 @@
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="{% url 'section:edit' section.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}"
+                            <a href="{% url 'section:edit' section.pk %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}"
                                 class="dropdown-item" aria-current="true">
                                 Edit
                             </a>
-                            <a href="{% url 'section:delete' section.pk %}?prev={{ request.build_absolute_uri|urlencode }}"
+                            <a href="{% url 'section:delete' section.pk %}?prev={{ current_url|urlencode }}"
                                 class="dropdown-item" aria-current="true">
                                 Delete
                             </a>
@@ -39,21 +49,26 @@
             </div>
         </div>
         <hr>
-        <div class="row align-items-center justify-content-between">
+        <div class="row align-items-center mb-3 justify-content-between">
             <div class="col-auto">
-                <h4>Students</h4>
+                <h4 class="p-0 m-0">
+                    Students
+                    <small class="text-body-secondary">
+                        ({{ section.students.all.count }} students)
+                    </small>
+                </h4>
             </div>
             <div class="col-auto">
-                <a href="{% url 'section:student:add' section.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}"
+                <a href="{% url 'section:student:add' section.pk %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}"
                     class="btn btn-sm btn-success">
                     <i class="fa-solid fa-plus"></i>
-                    <span>Add</span>
+                    <span>Add new student</span>
                 </a>
                 {% if students %}
-                <a href="{% url 'section:student:delete_all' section.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}"
+                <a href="{% url 'section:student:delete_all' section.pk %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}"
                     class="btn btn-sm btn-danger">
                     <i class="fa-solid fa-trash"></i>
-                    <span>Delete All</span>
+                    <span>Delete all students</span>
                 </a>
                 {% endif %}
             </div>
@@ -81,21 +96,21 @@
                                     <div class="row gx-1 justify-content-center">
                                         <div class="col-auto">
                                             <div class="">
-                                                <a href="{% url 'section:student:view' section.pk student.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="btn">
+                                                <a href="{% url 'section:student:view' section.pk student.pk %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}" class="btn">
                                                     View
                                                 </a>
                                             </div>
                                         </div>
                                         <div class="col-auto">
                                             <div class="">
-                                                <a href="{% url 'section:student:edit' section.pk student.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="btn btn-success">
+                                                <a href="{% url 'section:student:edit' section.pk student.pk %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}" class="btn btn-success">
                                                     Edit
                                                 </a>
                                             </div>
                                         </div>
                                         <div class="col-auto">
                                             <div class="">
-                                                <a href="{% url 'section:student:delete' section.pk student.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="btn btn-danger">
+                                                <a href="{% url 'section:student:delete' section.pk student.pk %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}" class="btn btn-danger">
                                                     Delete
                                                 </a>
                                             </div>

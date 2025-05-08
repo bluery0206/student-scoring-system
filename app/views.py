@@ -21,8 +21,6 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def index(request):
-    """ Shows the index/home/dashboard page """
-
     courses = models.Course.objects.all()[:9]
     sections = models.Section.objects.all()[:6]
     tests = models.Test.objects.all()[:6]
@@ -39,8 +37,6 @@ def index(request):
 
 
 def signin(request):
-    """ User Login View """
-
     form = forms.SignInForm()
 
     if request.method == "POST":
@@ -64,8 +60,6 @@ def signin(request):
 
 
 def signup(request):
-    """ User Register View """
-
     form = forms.SignUpForm()
 
     if request.method == "POST":
@@ -87,14 +81,12 @@ def signup(request):
 
 
 def signout(request):
-    """ Logouts the user """
     user = request.user
     logout(request)
     output_msg = f"User ({user.username}) successfuly signed out."
     logger.debug(output_msg)
     messages.success(request, output_msg)
     return redirect('app-index')
-
 
 
 
@@ -107,6 +99,7 @@ def course(request):
     }
 
     return render(request, "app/course/index.html", context)
+
 
 
 def course_add(request):
@@ -139,6 +132,7 @@ def course_add(request):
     return render(request, "app/course/form.html", context)
 
 
+
 def course_edit(request, course_id):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
@@ -168,6 +162,7 @@ def course_edit(request, course_id):
     return render(request, "app/course/form.html", context)
 
 
+
 def course_delete(request, course_id):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
@@ -191,6 +186,8 @@ def course_delete(request, course_id):
     }
 
     return render(request, "app/base/form.html", context)
+
+
 
 def course_delete_all(request):
     prev = unquote(request.GET.get("prev", ""))
@@ -219,6 +216,7 @@ def course_delete_all(request):
     return render(request, "app/base/form.html", context)
 
 
+
 def course_view(request, course_id):
     course = get_object_or_404(models.Course, pk=course_id)
     section = course.section
@@ -237,16 +235,17 @@ def course_view(request, course_id):
 
 
 
-
 def section(request):
     sections = models.Section.objects.all()
 
     context = {
         'title': 'Sections',
         'sections': sections,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/section/index.html", context)
+
 
 
 def section_add(request):
@@ -255,11 +254,10 @@ def section_add(request):
 
     if request.method == "POST":
         form = forms.SectionForm(request.POST)
-        logger.debug("Section accepted. Validating...")
 
         if form.is_valid():
             form.save()
-            output_msg = f"Section ({form.instance.name}) created."
+            output_msg = f"Section ({form.instance.name}) succesfully created."
             logger.debug(output_msg)
             messages.success(request, output_msg)
             return redirect(next if next else 'section:index')
@@ -269,12 +267,12 @@ def section_add(request):
     context = {
         'title': 'Section - Add',
         'form': form,
-        'is_desctructive': False,
         'prev': prev,
-        'next': next,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/section/form.html", context)
+
 
 
 def section_edit(request, pk):
@@ -298,36 +296,39 @@ def section_edit(request, pk):
     context = {
         'title': f'Section - Edit {section.name}',
         'form': form,
-        'is_desctructive': False,
         'prev': prev,
-        'next': next,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/section/form.html", context)
+
+
 
 def section_delete(request, pk):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
 
     section = get_object_or_404(models.Section, pk=pk)
-    name = section.name 
-
+    section_name = section.name 
+    
     if request.method == "POST":
+        output_msg = f"Section ({section_name}) deleted successfully."
         section.delete()
-        output_msg = f"Section ({name}) deleted successfully."
         logger.debug(output_msg)
         messages.success(request, output_msg)
         return redirect(next if next else 'section:index')
     
     context = {
-        'title': f'Section - Delete {name}',
-        'description': "This operation cannot be undone.",
+        'title': f'Section - Delete {section_name}',
+        'description': "This operation cannot be undone. All students that belongs to this section will also be deleted.",
         'is_desctructive': True,
         'prev': prev,
         'next': next,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/base/form.html", context)
+
 
 
 def section_delete_all(request):
@@ -341,20 +342,22 @@ def section_delete_all(request):
         for section in sections:
             section.delete()
 
-        output_msg = f"All sections deleted successfully."
+        output_msg = "All sections deleted successfully."
         logger.debug(output_msg)
         messages.success(request, output_msg)
         return redirect(next if next else 'section:index')
     
     context = {
         'title': f'Section - Delete All',
-        'description': "This operation cannot be undone.",
+        'description': "This operation cannot be undone. All students within sections will also be deleted.",
         'is_desctructive': True,
         'prev': prev,
-        'next': next,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/base/form.html", context)
+
+
 
 def section_view(request, pk):
     prev = unquote(request.GET.get("prev", ""))
@@ -368,7 +371,7 @@ def section_view(request, pk):
         'section': section,
         'students': students,
         'prev': prev,
-        'next': next,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/section/view.html", context)

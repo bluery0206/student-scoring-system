@@ -8,14 +8,14 @@
                     <h4>Sections</h4>
                 </div>
                 <div class="col-auto">
-                    <a href="{% url 'section:add' %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="btn btn-sm btn-success">
+                    <a href="{% url 'section:add' %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}" class="btn btn-sm btn-success">
                         <i class="fa-solid fa-plus"></i>
-                        <span>Add</span>
+                        <span>Add new section</span>
                     </a>
                     {% if sections %}
-                        <a href="{% url 'section:delete_all' %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="btn btn-sm btn-danger">
+                        <a href="{% url 'section:delete_all' %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}" class="btn btn-sm btn-danger">
                             <i class="fa-solid fa-trash"></i>
-                            <span>Delete All</span>
+                            <span>Delete all sections</span>
                         </a>
                     {% endif %}
                 </div>
@@ -30,8 +30,47 @@
                                         <h5 class="card-title">
                                             {{ section.name }}
                                         </h5>
-                                        <div class="card-text"> 
-                                            {{ section.description }}
+                                        {% if section.description %}
+                                            <div class="card-text"> 
+                                                <div class="row text-body-secondary">
+                                                    <div class="col-1">
+                                                        <i class="fa-solid fa-note-sticky"></i>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <span class="fw-bold">{{ section.description }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        <div class="card-text">
+                                            <div class="row text-body-secondary">
+                                                <div class="col-1">
+                                                    <i class="fa-solid fa-users-between-lines"></i>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <small>{{ section.students.all.count }} student(s)</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-text">
+                                            <div class="row text-body-secondary">
+                                                <div class="col-1">
+                                                    <i class="fa-regular fa-calendar-plus"></i> 
+                                                </div>
+                                                <div class="col-auto">
+                                                    <small>Created: {{ section.date_add }} </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-text">
+                                            <div class="row text-body-secondary">
+                                                <div class="col-1">
+                                                    <i class="fa-solid fa-clock"></i>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <small>Updated: {{ section.date_update }}</small>
+                                                </div>
+                                            </div>     
                                         </div>
                                     </div>
                                     <div class="col-auto">
@@ -42,13 +81,13 @@
                                             </button>
                                             <ul class="dropdown-menu">
                                                 <li>
-                                                    <a href="{% url 'section:view' section.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="dropdown-item" aria-current="true">
+                                                    <a href="{% url 'section:view' section.pk %}" class="dropdown-item" aria-current="true">
                                                         View
                                                     </a>
-                                                    <a href="{% url 'section:edit' section.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="dropdown-item" aria-current="true">
+                                                    <a href="{% url 'section:edit' section.pk %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}" class="dropdown-item" aria-current="true">
                                                         Edit
                                                     </a>
-                                                    <a href="{% url 'section:delete' section.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="dropdown-item" aria-current="true">
+                                                    <a href="{% url 'section:delete' section.pk %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}" class="dropdown-item" aria-current="true">
                                                         Delete
                                                     </a>
                                                 </li>
