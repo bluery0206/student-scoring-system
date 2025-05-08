@@ -1,23 +1,45 @@
 {% extends 'app/base/default.html' %}
 
 {% block content %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <div class="container  py-4 px-sm-4">
         <div class="row justify-content-between">
             <div class="col-auto">
-                <h2>
-                    <i class="fa-solid fa-user-group"></i>
-                    <span>{{ test }}</span>
-                </h2>
-                <small class="text-body-secondary">
-                    <div>
-                        <span><i class="fa-regular fa-calendar-plus"></i> Date Created: {{ student.date_add }} </span>
+                <h2>{{ test.name }}</h2>
+                <h4>
+                    <span>{{ course.name }}</span>
+                </h4>
+                <h6>
+                    <span>{{ section.name }}</span>
+                    {% if section.description %}
+                        <small class="text-body-secondary">
+                            {{ section.description }}
+                        </small>
+                    {% endif %}
+                </h6>
+                <p>
+                    {% if test.description %}
+                        <small class="fst-italic text-body-secondary">
+                            <span class="fw-bold">Description: </span>{{ test.description }}
+                        </small>
+                    {% endif %}
+                </p>
+                <div class="row">
+                    <div class="col-auto">
+                        <div class="text-nowrap text-body-secondary">
+                            <i class="fa-regular fa-calendar-plus"></i> 
+                            <small>Created: {{ test.date_add }} </small>
+                        </div>
                     </div>
-                    <div>
-                        <span><i class="fa-solid fa-clock"></i> Date Updated: {{ student.date_update }} </span>
+                    <div class="col-auto">
+                        <div class="text-nowrap text-body-secondary">
+                            <i class="fa-solid fa-clock"></i>
+                            <small>Updated: {{ test.date_update }}</small>
+                        </div>
                     </div>
-                </small>
+                </div>
             </div>
-
 
             <div class="col-auto">
                 <div class="dropdown">
@@ -40,13 +62,14 @@
                 </div>
             </div>
         </div>
+
         <hr>
+
         <div class="row flex-md-row-reverse p-2 gx-4">
-            <div class="col-md-6">
+            <div class="col-md-6 mb-4 mb-md-0">
                 <div class="row">
                     <div class="px-4 ">
                         <h4>Frequency of Test Scores Across Students</h4>
-                        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
                         <div>
                             <canvas id="freq-of-test-scores"></canvas>
                         </div>
@@ -100,7 +123,6 @@
                 </div>
                 <div class="row">
                     <div class="px-4 mt-4">
-                        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
                         <h4>Pass/Fail Distribution</h4>
                         <div class="d-flex justify-content-center">
                             <canvas id="passing" class="w-50 h-50"></canvas>
