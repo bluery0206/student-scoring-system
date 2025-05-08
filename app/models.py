@@ -40,8 +40,7 @@ class Course(models.Model):
 
     class Meta:
         unique_together = [[
-            'name', 
-            'instructor',
+            'name',
             'section',
         ]]
 
@@ -140,6 +139,10 @@ class Test(models.Model):
 
     def __str__(self):
         return f"{self.name.title()} ({self.total_score} points)"
+    
+    @property
+    def passing_score(self):
+        return self.total_score * self.pass_rate
 
 
 class Score(models.Model):
