@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from urllib.parse import unquote # For decoding encoded urls (e.g. https%3A%2F%2Fexample.com -> https://example.com)
 
 import logging
+import numpy as np
+import json as js
 
 from . import forms
 from . import models
@@ -640,16 +642,59 @@ def test_view(request, course_id, test_id):
     course = get_object_or_404(models.Course, pk=course_id)
     section = course.section
     students:list[models.Student] = section.students.all()
+
+    # Get all student score instances
     scores = [student.scores.filter(test=test).first() for student in students]
 
-    print(scores)
+    # Getting score values and if None if score instance is NOne
+    scores_list = [(None if not score else score.score) for score in scores]
+
+    # Plus one para naay perfect nga score
+    total_score = test.total_score + 1
+
+    # a list [0, ..., total_score]
+    scores_range = list(range(total_score))
+
+    # Inits an array to count how many scores exists
+    scores_freq = [0 for _ in range(total_score)]
+
+    # Counts the scores
+    for score in scores_list: 
+        if type(score) == int:
+            scores_freq[score] += 1
+
+    # Tungaon ang list N_SPLIT times para dile kaayo guot sa graph
+    N_SPLIT = 10
+    scores_freq = np.array_split(scores_freq, N_SPLIT)
+    scores_range = np.array_split(scores_range, N_SPLIT)
+
+    # Kuhaon ang first number ug ang last number sa kada split 
+    # Then convert to string so "start_number-end_number"
+    scores_range = [str(f"{score[0]}-{score[-1]}") for score in scores_range]
+
+    # I total tanang number kada split
+    scores_freq = [int(score.sum()) for score in scores_freq]
+
+    # GETTING THE PERCENTAGE OF PASSED STUDENT
+    n_passed = 0
+    n_failed = 0
+    # Counts the scores
+    for score in scores_list: 
+        if score > test.passing_score:
+            n_passed += 1
+        else:
+            n_failed += 1
 
     context = {
-        'title': f'test - {test.name}',
+        'title': f'Test - {test.name}',
         'test': test,
         'course': course,
         'section': section,
         'students': zip(students, scores),
+        'scores_freq': js.dumps(scores_freq),
+        'scores_range': js.dumps(scores_range),
+        'n_passed': js.dumps(n_passed),
+        'n_failed': js.dumps(n_failed),
         'prev': prev,
         'next': next,
     }

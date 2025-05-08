@@ -41,36 +41,93 @@
             </div>
         </div>
         <hr>
-        <div class="row border border-danger flex-md-row-reverse p-2 gx-2">
+        <div class="row flex-md-row-reverse p-2 gx-4">
             <div class="col-md-6">
-                <div class="border-p2 border-danger">
-                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-                    <div>
-                        <canvas id="myChart"></canvas>
+                <div class="row">
+                    <div class="px-4 ">
+                        <h4>Frequency of Test Scores Across Students</h4>
+                        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                        <div>
+                            <canvas id="freq-of-test-scores"></canvas>
+                        </div>
+                        <script 
+                            defer
+                            data-scores-range="{{ scores_range }}"
+                            data-scores-freq="{{ scores_freq }}"
+                            data-score-total="{{ test.total_score }}"
+                        >
+                            const data1 = document.currentScript.dataset;    
+                            const ctx1 = document.getElementById('freq-of-test-scores');
+
+                            var maxNum = Math.max(...JSON.parse(data1.scoresFreq));
+                            var total_score = JSON.parse(data1.scoreTotal);
+
+                            if (maxNum < (data1.scoreTotal * 0.5)) {
+                                total_score = maxNum * 2;
+                            }
+
+                            new Chart(ctx1, {
+                                type: 'bar',
+                                data: {
+                                    labels: JSON.parse(data1.scoresRange),
+                                    datasets: [{
+                                        label: 'Frequency of Test Scores Across Students',
+                                        data: JSON.parse(data1.scoresFreq),
+                                        borderWidth: 1
+                                    }]
+                                },
+                                options: {
+                                    scales: {
+                                        x: {
+                                            title: { display: true, text: 'Grade Range' }  // X-axis label
+                                        },
+                                        y: {
+                                            max: total_score,
+                                            beginAtZero: true,
+                                            title: { display: true, text: 'Number of Students' },
+                                            ticks: {
+                                                callback: function(value) {
+                                                return Number.isInteger(value) ? value : '';
+                                                },
+                                                precision: 0 
+                                            }
+                                        }
+                                    }
+                            }
+                            });
+                        </script>
                     </div>
-                    <script>
-                        const ctx = document.getElementById('myChart');
-                    
-                        new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                            datasets: [{
-                            label: '# of Votes',
-                            data: [12, 19, 3, 5, 2, 3],
-                            borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                            }
-                        }
-                        });
-                    </script>
+                </div>
+                <div class="row">
+                    <div class="px-4 mt-4">
+                        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                        <h4>Pass/Fail Distribution</h4>
+                        <div class="d-flex justify-content-center">
+                            <canvas id="passing" class="w-50 h-50"></canvas>
+                        </div>
+                        <script 
+                            defer
+                            data-n-passed="{{ n_passed }}"
+                            data-n-failed="{{ n_failed }}"
+                        >
+                            const data = document.currentScript.dataset;    
+                            const ctx = document.getElementById('passing');
+
+                            new Chart(ctx, {
+                                type: 'pie',
+                                data: {
+                                    labels: ['Passed', 'Failed'],
+                                    datasets: [{
+                                        label: 'Pass/Fail Distribution',
+                                        data: [JSON.parse(data.nPassed), JSON.parse(data.nFailed)],
+                                        borderWidth: 1
+                                    }],
+                                },
+                                options: {
+                                }
+                            });
+                        </script>
+                    </div>
                 </div>
             </div>
             <div class="col-md-6">
