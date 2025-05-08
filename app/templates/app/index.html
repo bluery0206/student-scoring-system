@@ -8,119 +8,184 @@
                     <h4>Courses</h4>
                 </div>
                 <div class="col-auto">
-                    <a href="" class="btn btn-sm btn-primary">
+                    <a href="{% url 'course:index' %}" class="btn btn-sm btn-primary">
                         <i class="fa-solid fa-angles-right"></i>
-                        <span>See all</span>
+                        <span>See all courses</span>
                     </a>
-                    <a href="" class="btn btn-sm btn-success">
+                    <a href="{% url 'course:add' %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}" class="btn btn-sm btn-success">
                         <i class="fa-solid fa-plus"></i>
-                        <span>Add</span>
-                    </a>
-                    <a href="" class="btn btn-sm btn-danger">
-                        <i class="fa-solid fa-trash"></i>
-                        <span>Delete All</span>
+                        <span>Add new course</span>
                     </a>
                 </div>
             </div>
             <div class="row row-cols-1 row-cols-lg-3 row-cols-md-2 g-2">
-                <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row justify-content-between">
-                                <div class="col-auto">
-                                    <h5 class="card-title">
-                                        Course Name 
-                                    </h5>
-                                    <h6 class="text-body-secondary"> 
-                                        Section Name
-                                    </h6>
-                                    <div class="card-text"> 
-                                        Course Description
+                {% for course in courses %}
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row justify-content-between">
+                                    <div class="col-10">
+                                        <h5 class="card-title">
+                                            {{ course.name }} 
+                                        </h5>
+                                        {% if course.description %}
+                                            <div class="card-text"> 
+                                                <div class="row text-body-secondary">
+                                                    <div class="col-1">
+                                                        <i class="fa-solid fa-note-sticky"></i>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <span class="fw-bold">{{ course.description }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        <div class="card-text">
+                                            <div class="row text-body-secondary">
+                                                <div class="col-1">
+                                                    <i class="fa-solid fa-users-between-lines"></i>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <small>Section: {{ course.section.name }} ({{ course.section.students.all.count }} student(s))</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-text">
+                                            <div class="row text-body-secondary">
+                                                <div class="col-1">
+                                                    <i class="fa-regular fa-calendar-plus"></i> 
+                                                </div>
+                                                <div class="col-auto">
+                                                    <small>Created: {{ course.date_add }} </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-text">
+                                            <div class="row text-body-secondary">
+                                                <div class="col-1">
+                                                    <i class="fa-solid fa-clock"></i>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <small>Updated: {{ course.date_update }}</small>
+                                                </div>
+                                            </div>     
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="dropdown">
-                                        <button type="button" class="btn" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <span class="visually-hidden">Toggle Dropdown</span>
-                                            <i class="fa-solid fa-bars"></i>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li>
-                                                <a href="#" class="dropdown-item" aria-current="true">
-                                                    View
-                                                </a>
-                                                <a href="#" class="dropdown-item" aria-current="true">
-                                                    Edit
-                                                </a>
-                                                <a href="#" class="dropdown-item" aria-current="true">
-                                                    Delete
-                                                </a>
-                                            </li>
-                                        </ul>
+                                    <div class="col-2">
+                                        <div class="dropdown px-0">
+                                            <button type="button" class="btn m-0" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <span class="visually-hidden">Toggle Dropdown</span>
+                                                <i class="fa-solid fa-bars"></i>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a href="{% url 'course:view' course.pk %}" class="dropdown-item" aria-current="true">
+                                                        View
+                                                    </a>
+                                                    <a href="{% url 'course:edit' course.pk %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}" class="dropdown-item" aria-current="true">
+                                                        Edit
+                                                    </a>
+                                                    <a href="{% url 'course:delete' course.pk %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}" class="dropdown-item" aria-current="true">
+                                                        Delete
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
-
         <hr>
-
         <div class="">
-            <div class="row">
-                <div class="col">
+                <div class="col mb-4 mb-md-0">
                     <div class="row align-items-center justify-content-between">
                         <div class="col-auto">
                             <h4>Sections</h4>
                         </div>
                         <div class="col-auto">
-                            <a href="" class="btn btn-sm btn-primary">
+                            <a href="{% url 'section:index' %}" class="btn btn-sm btn-primary">
                                 <i class="fa-solid fa-angles-right"></i>
-                                <span>See all</span>
+                                <span>See all sections</span>
                             </a>
-                            <a href="" class="btn btn-sm btn-success">
+                            <a href="{% url 'section:add' %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}" class="btn btn-sm btn-success">
                                 <i class="fa-solid fa-plus"></i>
-                                <span>Add</span>
-                            </a>
-                            <a href="" class="btn btn-sm btn-danger">
-                                <i class="fa-solid fa-trash"></i>
-                                <span>Delete All</span>
+                                <span>Add new section</span>
                             </a>
                         </div>
                     </div>
-                    <div class="row row-cols-1 row-cols-lg-2 g-2">
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row justify-content-between">
-                                        <div class="col-auto">
-                                            <h5 class="card-title">
-                                                Course Name 
-                                            </h5>
-                                            <h6 class="text-body-secondary"> 
-                                                Section Name
-                                            </h6>
-                                            <div class="card-text"> 
-                                                Course Description
+                    <div class="row row-cols-1 row-cols-lg-3 row-cols-md-2 g-2">
+                        {% for section in sections %}
+                            <div class="col">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row justify-content-between">
+                                            <div class="col-10">
+                                                <h5 class="card-title">
+                                                    {{ section.name }}
+                                                </h5>
+                                                {% if section.description %}
+                                                    <div class="card-text"> 
+                                                        <div class="row text-body-secondary">
+                                                            <div class="col-1">
+                                                                <i class="fa-solid fa-note-sticky"></i>
+                                                            </div>
+                                                            <div class="col-auto">
+                                                                <span class="fw-bold">{{ section.description }}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                <div class="card-text">
+                                                    <div class="row text-body-secondary">
+                                                        <div class="col-1">
+                                                            <i class="fa-solid fa-users-between-lines"></i>
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <small>{{ section.students.all.count }} student(s)</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-text">
+                                                    <div class="row text-body-secondary">
+                                                        <div class="col-1">
+                                                            <i class="fa-regular fa-calendar-plus"></i> 
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <small>Created: {{ section.date_add }} </small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-text">
+                                                    <div class="row text-body-secondary">
+                                                        <div class="col-1">
+                                                            <i class="fa-solid fa-clock"></i>
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <small>Updated: {{ section.date_update }}</small>
+                                                        </div>
+                                                    </div>     
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <div class="dropdown">
-                                                <div class="btn-group">
-                                                    <a href="#" class="btn btn-primary">
-                                                        View
-                                                    </a>
-
-                                                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <div class="col-2">
+                                                <div class="dropdown px-0">
+                                                    <button type="button" class="btn m-0" data-bs-toggle="dropdown" aria-expanded="false">
                                                         <span class="visually-hidden">Toggle Dropdown</span>
+                                                        <i class="fa-solid fa-bars"></i>
                                                     </button>
-
                                                     <ul class="dropdown-menu">
                                                         <li>
-                                                            <a href="#" class="dropdown-item" aria-current="true">
-                                                                Dropdown link 1
+                                                            <a href="{% url 'section:view' section.pk %}" class="dropdown-item" aria-current="true">
+                                                                View
+                                                            </a>
+                                                            <a href="{% url 'section:edit' section.pk %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}" class="dropdown-item" aria-current="true">
+                                                                Edit
+                                                            </a>
+                                                            <a href="{% url 'section:delete' section.pk %}?prev={{ current_url|urlencode }}&next={{ current_url|urlencode }}" class="dropdown-item" aria-current="true">
+                                                                Delete
                                                             </a>
                                                         </li>
                                                     </ul>
@@ -130,68 +195,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="row align-items-center justify-content-between">
-                        <div class="col-auto">
-                            <h4>Tests</h4>
-                        </div>
-                        <div class="col-auto">
-                            <a href="" class="btn btn-sm btn-primary">
-                                <i class="fa-solid fa-angles-right"></i>
-                                <span>See all</span>
-                            </a>
-                            <a href="" class="btn btn-sm btn-success">
-                                <i class="fa-solid fa-plus"></i>
-                                <span>Add</span>
-                            </a>
-                            <a href="" class="btn btn-sm btn-danger">
-                                <i class="fa-solid fa-trash"></i>
-                                <span>Delete All</span>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="row row-cols-1 row-cols-lg-2 g-2">
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row justify-content-between">
-                                        <div class="col-auto">
-                                            <h5 class="card-title">
-                                                Course Name 
-                                            </h5>
-                                            <h6 class="text-body-secondary"> 
-                                                Section Name
-                                            </h6>
-                                            <div class="card-text"> 
-                                                Course Description
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <div class="dropdown">
-                                                <div class="btn-group">
-                                                    <a href="#" class="btn btn-primary">
-                                                        View
-                                                    </a>
-                                                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                                                        <span class="visually-hidden">Toggle Dropdown</span>
-                                                    </button>
-                                                    <ul class="dropdown-menu">
-                                                        <li>
-                                                            <a href="#" class="dropdown-item" aria-current="true">
-                                                                Dropdown link 1
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>

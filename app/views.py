@@ -23,8 +23,15 @@ logger = logging.getLogger(__name__)
 def index(request):
     """ Shows the index/home/dashboard page """
 
+    courses = models.Course.objects.all()[:9]
+    sections = models.Section.objects.all()[:6]
+    tests = models.Test.objects.all()[:6]
+
     context = {
-    #     'form': UserRegisterForm()
+        "courses": courses,
+        "sections": sections,
+        "tests": tests,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/index.html", context)
