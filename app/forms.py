@@ -184,7 +184,7 @@ class SectionForm(forms.ModelForm):
 class TestForm(forms.ModelForm):
     class Meta:
         model 	= models.Test
-        fields 	= ["name" ,"description" ,"total_score"]
+        fields 	= ["name" ,"description" ,"total_score", "pass_rate"]
         widgets = {
             "name": forms.TextInput(attrs={
                 'class' : 'form-control',
@@ -200,6 +200,12 @@ class TestForm(forms.ModelForm):
                 'min': 1,
                 'max': 100,
                 'step': 1,
+            }),
+            "pass_rate": forms.NumberInput(attrs={
+                'class' : 'form-control',
+                'min': 0.00,
+                'max': 1.00,
+                'step': 0.01,
             }),
         }
 
