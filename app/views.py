@@ -80,6 +80,8 @@ def signup(request):
     return render(request, "app/auth/signup.html", context)
 
 
+
+@login_required
 def signout(request):
     user = request.user
     logout(request)
@@ -90,6 +92,11 @@ def signout(request):
 
 
 
+# COURSE VIEWS
+
+
+
+@login_required
 def course(request):
     courses = models.Course.objects.filter(instructor=request.user)
 
@@ -103,6 +110,7 @@ def course(request):
 
 
 
+@login_required
 def course_add(request):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
@@ -133,6 +141,7 @@ def course_add(request):
 
 
 
+@login_required
 def course_edit(request, course_id):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
@@ -162,6 +171,7 @@ def course_edit(request, course_id):
 
 
 
+@login_required
 def course_delete(request, course_id):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
@@ -188,6 +198,7 @@ def course_delete(request, course_id):
 
 
 
+@login_required
 def course_delete_all(request):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
@@ -216,6 +227,7 @@ def course_delete_all(request):
 
 
 
+@login_required
 def course_view(request, course_id):
     course = get_object_or_404(models.Course, pk=course_id)
     section = course.section
@@ -235,6 +247,11 @@ def course_view(request, course_id):
 
 
 
+# SECTION VIEWS
+
+
+
+@login_required
 def section(request):
     sections = models.Section.objects.all()
 
@@ -248,6 +265,7 @@ def section(request):
 
 
 
+@login_required
 def section_add(request):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
@@ -275,6 +293,7 @@ def section_add(request):
 
 
 
+@login_required
 def section_edit(request, pk):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
@@ -304,6 +323,7 @@ def section_edit(request, pk):
 
 
 
+@login_required
 def section_delete(request, pk):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
@@ -331,6 +351,7 @@ def section_delete(request, pk):
 
 
 
+@login_required
 def section_delete_all(request):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
@@ -359,6 +380,7 @@ def section_delete_all(request):
 
 
 
+@login_required
 def section_view(request, pk):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
@@ -378,6 +400,11 @@ def section_view(request, pk):
 
 
 
+# STUDENT VIEWS
+
+
+
+@login_required
 def student_add(request, section_id):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
@@ -410,6 +437,7 @@ def student_add(request, section_id):
 
 
 
+@login_required
 def student_edit(request, section_id, student_id):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
@@ -441,6 +469,7 @@ def student_edit(request, section_id, student_id):
 
 
 
+@login_required
 def student_delete(request, section_id, student_id):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
@@ -467,6 +496,7 @@ def student_delete(request, section_id, student_id):
 
 
 
+@login_required
 def student_delete_all(request, section_id):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
@@ -496,6 +526,7 @@ def student_delete_all(request, section_id):
 
 
 
+@login_required
 def student_view(request, section_id, student_id):
     prev = unquote(request.GET.get("prev", ""))
     
@@ -516,17 +547,11 @@ def student_view(request, section_id, student_id):
 
 
 
+# TEST VIEWS
 
 
 
-
-
-
-
-
-
-
-
+@login_required
 def test_add(request, course_id):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
@@ -555,12 +580,14 @@ def test_add(request, course_id):
         'course': course,
         'is_desctructive': False,
         'prev': prev,
-        'next': next,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/test/form.html", context)
 
 
+
+@login_required
 def test_edit(request, course_id, test_id):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
@@ -585,11 +612,14 @@ def test_edit(request, course_id, test_id):
         'form': form,
         'course': course,
         'prev': prev,
-        'next': next,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/test/form.html", context)
 
+
+
+@login_required
 def test_delete(request, course_id, test_id):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
@@ -606,15 +636,17 @@ def test_delete(request, course_id, test_id):
     
     context = {
         'title': f'Test - Delete {name}',
-        'description': "This operation cannot be undone.",
+        'description': "This operation cannot be undone. All scores related to this test will also be deleted",
         'is_desctructive': True,
         'prev': prev,
-        'next': next,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/base/form.html", context)
 
 
+
+@login_required
 def test_delete_all(request, course_id):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
@@ -634,22 +666,25 @@ def test_delete_all(request, course_id):
     
     context = {
         'title': f'Test - Delete All',
-        'description': "This operation cannot be undone.",
+        'description': "This operation cannot be undone. All scores related to tests will also be deleted.",
         'is_desctructive': True,
         'prev': prev,
-        'next': next,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/base/form.html", context)
 
+
+
+@login_required
 def test_view(request, course_id, test_id):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
     
-    test:models.Test = get_object_or_404(models.Test, pk=test_id)
+    test = get_object_or_404(models.Test, pk=test_id)
     course = get_object_or_404(models.Course, pk=course_id)
     section = course.section
-    students:list[models.Student] = section.students.all()
+    students = section.students.all()
 
     # Get all student score instances
     scores = [student.scores.filter(test=test).first() for student in students]
@@ -705,13 +740,18 @@ def test_view(request, course_id, test_id):
         'n_passed': js.dumps(n_passed),
         'n_failed': js.dumps(n_failed),
         'prev': prev,
-        'next': next,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/test/view.html", context)
 
 
 
+# SCORE VIEWS
+
+
+
+@login_required
 def score_add(request, course_id, test_id, student_id):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
@@ -728,7 +768,7 @@ def score_add(request, course_id, test_id, student_id):
             instance.test = test
             instance.student = student
             instance.save()
-            output_msg = f"test ({form.instance}) created."
+            output_msg = f"Score ({form.instance}) created."
             logger.debug(output_msg)
             messages.success(request, output_msg)
             return redirect(next if next else 'course:index')
@@ -741,14 +781,14 @@ def score_add(request, course_id, test_id, student_id):
         'course': course,
         'student': student,
         'test': test,
-        'is_desctructive': False,
         'prev': prev,
-        'next': next,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/score/form.html", context)
 
 
+@login_required
 def score_edit(request, course_id, test_id, student_id, score_id):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
@@ -763,7 +803,7 @@ def score_edit(request, course_id, test_id, student_id, score_id):
 
         if form.is_valid():
             form.save()
-            output_msg = f"test ({form.instance}) created."
+            output_msg = f"Score ({form.instance}) succesfully edited."
             logger.debug(output_msg)
             messages.success(request, output_msg)
             return redirect(next if next else 'course:index')
@@ -776,15 +816,15 @@ def score_edit(request, course_id, test_id, student_id, score_id):
         'course': course,
         'student': student,
         'test': test,
-        'is_desctructive': False,
         'prev': prev,
-        'next': next,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/score/form.html", context)
 
 
 
+@login_required
 def score_delete(request, course_id, test_id, student_id, score_id):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
@@ -792,7 +832,7 @@ def score_delete(request, course_id, test_id, student_id, score_id):
     score = get_object_or_404(models.Score, pk=score_id)
 
     if request.method == 'POST':
-        output_msg = f"test ({score}) deleted."
+        output_msg = f"Score ({score}) successfully deleted."
         score.delete()
         logger.debug(output_msg)
         messages.success(request, output_msg)
@@ -804,13 +844,14 @@ def score_delete(request, course_id, test_id, student_id, score_id):
         'description': 'This operation cannot be undone',
         'is_desctructive': True,
         'prev': prev,
-        'next': next,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/score/form.html", context)
 
 
 
+@login_required
 def score_delete_all(request, course_id, test_id, student_id):
     prev = unquote(request.GET.get("prev", ""))
     next = unquote(request.GET.get("next", ""))
@@ -833,7 +874,7 @@ def score_delete_all(request, course_id, test_id, student_id):
         'description': "This operation cannot be undone.",
         'is_desctructive': True,
         'prev': prev,
-        'next': next,
+        "current_url": request.build_absolute_uri,
     }
 
     return render(request, "app/base/form.html", context)
