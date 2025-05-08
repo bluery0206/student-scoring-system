@@ -42,7 +42,7 @@
                                             </button>
                                             <ul class="dropdown-menu">
                                                 <li>
-                                                    <a href="{% url 'course:view' course.pk %}?prev={{ request.build_absolute_uri|urlencode }}" class="dropdown-item" aria-current="true">
+                                                    <a href="{% url 'course:view' course.pk %}" class="dropdown-item" aria-current="true">
                                                         View
                                                     </a>
                                                     <a href="{% url 'course:edit' course.pk %}?prev={{ request.build_absolute_uri|urlencode }}&next={{ request.build_absolute_uri|urlencode }}" class="dropdown-item" aria-current="true">
