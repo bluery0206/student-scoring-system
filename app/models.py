@@ -127,6 +127,7 @@ class Test(models.Model):
         on_delete=models.CASCADE, 
         related_name="tests"
     )
+    pass_rate = models.FloatField(default=0.75)
     date_add = models.DateTimeField(auto_now_add=True)
     date_update = models.DateTimeField(auto_now=True)
 
@@ -158,7 +159,6 @@ class Score(models.Model):
 
     class Meta:
         unique_together = [[
-            'score', 
             'student', 
             'test',
         ]]
