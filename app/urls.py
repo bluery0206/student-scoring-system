@@ -12,7 +12,7 @@ scorepatterns = [
     path('add/<int:student_id>/', views.score_add, name="add"),
     path('edit/<int:student_id>/<int:score_id>/', views.score_edit, name="edit"),
     path('delete/<int:student_id>/<int:score_id>/', views.score_delete, name="delete"),
-    # path('delete/all/', views.score_delete_all, name="delete_all"),
+    path('delete/<int:student_id>/all/', views.score_delete_all, name="delete_all"),
     # path('<int:score_id>/', views.score_view, name="view"),
 ]
 

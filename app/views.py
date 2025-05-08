@@ -810,3 +810,32 @@ def score_delete(request, course_id, test_id, student_id, score_id):
     }
 
     return render(request, "app/score/form.html", context)
+
+
+
+def score_delete_all(request, course_id, test_id, student_id):
+    prev = unquote(request.GET.get("prev", ""))
+    next = unquote(request.GET.get("next", ""))
+
+    if request.method == "POST":
+        student = get_object_or_404(models.Student, pk=student_id)
+        scores = student.scores.all()
+        logger.debug("Deleting scores")
+
+        for score in scores:
+            score.delete()
+
+        output_msg = f"All scores deleted successfully."
+        logger.debug(output_msg)
+        messages.success(request, output_msg)
+        return redirect(next if next else 'course:index')
+    
+    context = {
+        'title': f'Score - Delete All',
+        'description': "This operation cannot be undone.",
+        'is_desctructive': True,
+        'prev': prev,
+        'next': next,
+    }
+
+    return render(request, "app/base/form.html", context)
