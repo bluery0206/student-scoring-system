@@ -2,7 +2,6 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.core.validators import RegexValidator, MinLengthValidator, FileExtensionValidator
-from django.forms import formset_factory # for making n number of forms
 
 from . import models
 
@@ -204,21 +203,14 @@ class TestForm(forms.ModelForm):
             }),
         }
 
-
 class ScoreForm(forms.ModelForm):
     class Meta:
         model 	= models.Score
-        fields 	= ["score" ,"student" ,"test"]
+        fields 	= ["score"]
         widgets = {
             "score": forms.NumberInput(attrs={
                 'class' : 'form-control',
                 'min': 0,
                 'max': 100,
-            }),
-            "student": forms.Select(attrs={
-                'class' : 'form-control',
-            }),
-            "test": forms.Select(attrs={
-                'class' : 'form-control',
             }),
         }
