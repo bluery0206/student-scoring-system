@@ -63,6 +63,26 @@
         {% endif %}
     </div>
 
+    <!-- Name field -->
+    <div class="mb-3">
+        <label for="{{ form.pass_rate.id_for_label}}">
+            {{ form.pass_rate.label|title }}
+        </label>
+        {% if form.pass_rate.errors %}
+            {{ form.pass_rate|add_class:"is-invalid" }}
+            
+            {% for error in form.pass_rate.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        {% elif not form.pass_rate.errors and request.method == "POST" %}
+            {{ form.pass_rate|add_class:"is-valid" }}
+        {% else %}
+            {{ form.pass_rate }}
+        {% endif %}
+    </div>
+
     <!-- Instructor field -->
     <div class="mb-3">
         <label class="form-label">
