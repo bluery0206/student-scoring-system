@@ -25,7 +25,7 @@ Student View
 - **Database**: SQLite (Django's Default)
 - **Authentication**: Django's built-in auth sytem
 
-** Installation
+## Installation
 
 1. Clone the repository:
 ``` bash
