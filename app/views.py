@@ -724,7 +724,7 @@ def test_view(request, course_id, test_id):
     # Counts the scores
     for score in scores_list: 
         if type(score) is int:
-            if score > test.passing_score:
+            if score >= test.passing_score:
                 n_passed += 1
             else:
                 n_failed += 1
