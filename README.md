@@ -53,12 +53,24 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-5. Run development server:
+5. Initialize database:
+``` bash
+python3 manage.py makemigrations
+python3 manage.py migrate
+```
+
+6. [OPTIONAL] Create superuser/admin:
+``` bash
+python3 manage.py createsuperuser
+```  
+   Then set your own admin account.
+
+7. Run development server:
 ``` bash
 python manage.py runserver
 ```
 
-6. Open your sever by going to `localhost:800/` in your browser.
+8. Open your sever by going to `localhost:800/` in your browser.
 
 ## Usage
 1. Log in
