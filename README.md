@@ -70,7 +70,7 @@ python3 manage.py createsuperuser
 python manage.py runserver
 ```
 
-8. Open your sever by going to `localhost:800/` in your browser.
+8. Open your sever by going to `localhost:8000/` in your browser.
 
 ## Usage
 1. Log in
